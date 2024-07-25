@@ -1,0 +1,8 @@
+[package]
+name = "rusty_notes"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+crossterm = "0.27.0"
+ratatui = "0.27.0"
