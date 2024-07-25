@@ -29,6 +29,8 @@ fn main() -> io::Result<()> {
                         KeyCode::Char(c) => app.insert_char(c),
 
                         KeyCode::Enter => app.enter(),
+                        KeyCode::Backspace => app.backspace(),
+                        KeyCode::Delete => app.delete(),
                         
                         KeyCode::Left => app.move_left(),
                         KeyCode::Right => app.move_right(),
