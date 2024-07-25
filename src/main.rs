@@ -1,6 +1,6 @@
 use std::{fs, io};
 
-use crossterm::event::{self, Event, KeyCode, KeyEventKind};
+use crossterm::event::{self, Event, KeyCode, KeyEventKind, KeyModifiers};
 
 mod editor;
 mod terminal;
@@ -24,22 +24,31 @@ fn main() -> io::Result<()> {
 
         match event::read()? {
             Event::Key(key_event) => {
-                if key_event.kind == KeyEventKind::Press {
+                if key_event.kind == KeyEventKind::Release {
+                    continue;
+                }
+                
+                if key_event.modifiers.contains(KeyModifiers::CONTROL) {
                     match key_event.code {
-                        KeyCode::Char(c) => app.insert_char(c),
-
-                        KeyCode::Enter => app.enter(),
-                        KeyCode::Backspace => app.backspace(),
-                        KeyCode::Delete => app.delete(),
-                        
-                        KeyCode::Left => app.move_left(),
-                        KeyCode::Right => app.move_right(),
-                        KeyCode::Up => app.move_up(),
-                        KeyCode::Down => app.move_down(),
-
-                        KeyCode::Esc => break,
+                        KeyCode::Char('q') => break,
                         _ => (),
                     }
+                }
+
+                match key_event.code {
+                    KeyCode::Char(c) => app.insert_char(c),
+
+                    KeyCode::Enter => app.enter(),
+                    KeyCode::Backspace => app.backspace(),
+                    KeyCode::Delete => app.delete(),
+                    
+                    KeyCode::Left => app.move_left(),
+                    KeyCode::Right => app.move_right(),
+                    KeyCode::Up => app.move_up(),
+                    KeyCode::Down => app.move_down(),
+
+                    KeyCode::Esc => break,
+                    _ => (),
                 }
             } 
             _ => (),
