@@ -48,7 +48,7 @@ fn highlight_cursor(lines: &mut Vec<Line>, cursor: &Cursor) {
 }
 
 fn add_line_numbers(lines: &mut Vec<Line>) {
-    let max_width = (lines.len() + 1) / 10 + 1;
+    let max_width = lines.len().to_string().len() + 1;
     *lines = lines
         .iter_mut()
         .enumerate()

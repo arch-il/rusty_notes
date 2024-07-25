@@ -27,6 +27,9 @@ fn main() -> io::Result<()> {
                 if key_event.kind == KeyEventKind::Press {
                     match key_event.code {
                         KeyCode::Char(c) => app.insert_char(c),
+
+                        KeyCode::Enter => app.enter(),
+                        
                         KeyCode::Left => app.move_left(),
                         KeyCode::Right => app.move_right(),
                         KeyCode::Up => app.move_up(),
