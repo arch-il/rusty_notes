@@ -8,27 +8,27 @@ use ratatui::{
 
 use crate::editor::{Cursor, Editor};
 
-pub fn ui(f: &mut Frame, app: &Editor) {
+pub fn ui(f: &mut Frame, editor: &Editor) {
     let block = Block::default()
         .borders(Borders::ALL)
         .border_set(border::ROUNDED)
-        .title(if let Some(file_name) = &app.current_file {
+        .title(if let Some(file_name) = &editor.current_file {
             &file_name
         } else {
             ""
         });
 
-    let mut lines = app
+    let mut lines = editor
         .lines
         .clone()
         .iter()
         .map(|line| Line::from(format!("{} ", line)))
         .collect::<Vec<_>>();
 
-    if let Some(selection_start) = &app.selection_start {
-        highlight_selection(&mut lines, &app.cursor, selection_start)
+    if let Some(selection_start) = &editor.selection_start {
+        highlight_selection(&mut lines, &editor.cursor, selection_start)
     } else {
-        highlight_cursor(&mut lines, &app.cursor);
+        highlight_cursor(&mut lines, &editor.cursor);
     }
 
     add_line_numbers(&mut lines);
