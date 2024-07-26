@@ -63,6 +63,11 @@ impl Editor {
     }
 
     pub fn backspace(&mut self) {
+        if self.selection_start.is_some() {
+            self.remove_selected();
+            return;
+        }
+
         if self.cursor.1 != 0 {
             self.lines[self.cursor.0].remove(self.cursor.1 - 1);
             self.cursor.1 -= 1;
@@ -75,13 +80,43 @@ impl Editor {
         }
     }
 
-	pub fn delete(&mut self) {
-		if self.cursor.1 < self.lines[self.cursor.0].len() {
-			self.lines[self.cursor.0].remove(self.cursor.1);
-		} else if self.cursor.0 < self.lines.len() - 1 {
-			self.lines[self.cursor.0] =
+    pub fn delete(&mut self) {
+        if self.selection_start.is_some() {
+            self.remove_selected();
+            return;
+        }
+        
+        if self.cursor.1 < self.lines[self.cursor.0].len() {
+            self.lines[self.cursor.0].remove(self.cursor.1);
+        } else if self.cursor.0 < self.lines.len() - 1 {
+            self.lines[self.cursor.0] =
                 self.lines[self.cursor.0].clone() + &self.lines[self.cursor.0 + 1];
-			self.lines.remove(self.cursor.0 + 1);
-		}
-	}
+            self.lines.remove(self.cursor.0 + 1);
+        }
+    }
+
+    pub fn remove_selected(&mut self) {
+        if let Some(selection_start) = self.selection_start {
+            self.selection_start = None;
+
+            let mut start = selection_start;
+            let mut end = self.cursor;
+
+            if self.cursor < selection_start {
+                start = self.cursor;
+                end = selection_start;
+            }
+
+            self.cursor = start;
+
+            if start.0 == end.0 {
+                let line = &self.lines[start.0];
+                self.lines[start.0] =
+                    String::from(String::from(&line[0..start.1]) + &line[end.1+1..]);
+            } else {
+                self.lines[end.0] = String::from(&self.lines[start.0][0..start.1]) + &self.lines[end.0][end.1..];
+                self.lines.drain(start.0..end.0);
+            }
+        }
+    }
 }

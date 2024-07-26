@@ -15,7 +15,6 @@ use crate::{
 fn main() -> io::Result<()> {
     let mut terminal = terminal::init()?;
     
-    
     let file_name = "notes/note.md";
     let text = fs::read_to_string(file_name)?;
     let mut editor = Editor::from_string(text);
