@@ -33,23 +33,24 @@ fn main() -> io::Result<()> {
                         KeyCode::Char('q') => break,
                         _ => (),
                     }
+                } else {
+                    match key_event.code {
+                        KeyCode::Char(c) => app.insert_char(c),
+    
+                        KeyCode::Enter => app.enter(),
+                        KeyCode::Backspace => app.backspace(),
+                        KeyCode::Delete => app.delete(),
+                        
+                        KeyCode::Left => app.move_left(),
+                        KeyCode::Right => app.move_right(),
+                        KeyCode::Up => app.move_up(),
+                        KeyCode::Down => app.move_down(),
+    
+                        KeyCode::Esc => break,
+                        _ => (),
+                    }
                 }
 
-                match key_event.code {
-                    KeyCode::Char(c) => app.insert_char(c),
-
-                    KeyCode::Enter => app.enter(),
-                    KeyCode::Backspace => app.backspace(),
-                    KeyCode::Delete => app.delete(),
-                    
-                    KeyCode::Left => app.move_left(),
-                    KeyCode::Right => app.move_right(),
-                    KeyCode::Up => app.move_up(),
-                    KeyCode::Down => app.move_down(),
-
-                    KeyCode::Esc => break,
-                    _ => (),
-                }
             } 
             _ => (),
         }

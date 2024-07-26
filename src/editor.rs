@@ -69,7 +69,7 @@ impl Editor {
 	pub fn delete(&mut self) {
 		if self.cursor.1 < self.lines[self.cursor.0].len() {
 			self.lines[self.cursor.0].remove(self.cursor.1);
-		} else if self.cursor.0 < self.lines.len() {
+		} else if self.cursor.0 < self.lines.len() - 1 {
 			self.lines[self.cursor.0] =
                 self.lines[self.cursor.0].clone() + &self.lines[self.cursor.0 + 1];
 			self.lines.remove(self.cursor.0 + 1);
