@@ -48,11 +48,19 @@ impl Editor {
     }
 
     pub fn insert_char(&mut self, c: char) {
+        if self.selection_start.is_some() {
+            self.remove_selected();
+        }
+
         self.lines[self.cursor.0].insert(self.cursor.1, c);
         self.cursor.1 += 1;
     }
 
     pub fn enter(&mut self) {
+        if self.selection_start.is_some() {
+            self.remove_selected();
+        }
+        
         let after_split = self.lines[self.cursor.0].split_at(self.cursor.1);
         let after_split = (String::from(after_split.0), String::from(after_split.1));
         self.lines[self.cursor.0] = String::from(after_split.0);
@@ -85,7 +93,7 @@ impl Editor {
             self.remove_selected();
             return;
         }
-        
+
         if self.cursor.1 < self.lines[self.cursor.0].len() {
             self.lines[self.cursor.0].remove(self.cursor.1);
         } else if self.cursor.0 < self.lines.len() - 1 {
