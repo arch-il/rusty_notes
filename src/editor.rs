@@ -2,10 +2,12 @@ pub use cursor::Cursor;
 
 mod cursor;
 
+#[derive(Debug)]
 pub struct Editor {
     pub lines: Vec<String>,
     pub current_file: Option<String>,
     pub cursor: Cursor,
+    pub selection_start: Option<Cursor>,
 }
 
 #[allow(dead_code)] //?
@@ -15,6 +17,7 @@ impl Editor {
             lines,
             current_file: None,
             cursor: Cursor(0, 0),
+            selection_start: None,
         }
     }
 
@@ -27,6 +30,7 @@ impl Editor {
             lines,
             current_file: None,
             cursor: Cursor(0, 0),
+            selection_start: None,
         }
     }
 
@@ -35,6 +39,7 @@ impl Editor {
             lines: Vec::new(),
             current_file: None,
             cursor: Cursor(0, 0),
+            selection_start: None,
         }
     }
 

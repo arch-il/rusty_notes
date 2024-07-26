@@ -1,6 +1,7 @@
 use std::{fs, io};
 
 use crossterm::event::{self, Event, KeyCode, KeyEventKind, KeyModifiers};
+use editor::Cursor;
 
 mod editor;
 mod terminal;

@@ -1,5 +1,8 @@
+use std::cmp::Ordering;
+
 use super::Editor;
 
+#[derive(Debug, PartialEq)]
 pub struct Cursor(pub usize, pub usize);
 
 impl Editor {
@@ -38,6 +41,16 @@ impl Editor {
 			if self.cursor.1 > line_len {
 				self.cursor.1 = line_len;
 			}
+		}
+	}
+}
+
+impl PartialOrd for Cursor {
+	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		match self.0.cmp(&other.0) {
+			Ordering::Greater => Some(Ordering::Greater),
+			Ordering::Less => Some(Ordering::Less),
+			Ordering::Equal => Some(self.1.cmp(&other.1)),
 		}
 	}
 }
