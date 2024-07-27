@@ -12,7 +12,7 @@ pub fn take_input(editor: &mut Editor) {
 			let shift = key_event.modifiers.contains(KeyModifiers::SHIFT);
 			
 			if key_event.modifiers.contains(KeyModifiers::CONTROL) {
-				ctrl_input(editor, &key_event.code);
+				ctrl_input(editor, &key_event.code, shift);
 			} else {
 				normal_input(editor, &key_event.code, shift);
 			}
@@ -40,9 +40,13 @@ fn normal_input(editor: &mut Editor, key_code: &KeyCode, shift: bool) {
 	}
 }
 
-fn ctrl_input(editor: &mut Editor, key_code: &KeyCode) {
+fn ctrl_input(editor: &mut Editor, key_code: &KeyCode, shift: bool) {
 	match key_code {
 		KeyCode::Char('q') => editor.exit = true,
+
+		KeyCode::Left => editor.move_left_word(shift),
+		KeyCode::Right => editor.move_right_word(shift),
+
 		_ => (),
 	}
 }
