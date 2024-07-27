@@ -54,4 +54,14 @@ impl Editor {
             }
         }
     }
+
+	pub fn cut(&mut self) {
+		self.copy();
+
+		if self.selection_start.is_some() {
+			self.remove_selected();
+		} else {
+			self.lines.remove(self.cursor.0);
+		}
+	}
 }
