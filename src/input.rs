@@ -44,6 +44,9 @@ fn ctrl_input(editor: &mut Editor, key_code: &KeyCode, shift: bool) {
 	match key_code {
 		KeyCode::Char('q') => editor.exit = true,
 
+		KeyCode::Char('c') => editor.copy(),
+		KeyCode::Char('p') => editor.paste(),
+
 		KeyCode::Left => editor.move_left_word(shift),
 		KeyCode::Right => editor.move_right_word(shift),
 

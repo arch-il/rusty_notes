@@ -4,4 +4,6 @@ my take on minimalist journal app made with ratatui.
 - [x] selection
 - [ ] title screen
 - [ ] calendar
-- [ ] Copy/Paste
+- [ ] copy/paste
+- [x] word jumping
+- [ ] scrolling

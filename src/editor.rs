@@ -1,5 +1,6 @@
 pub use cursor::Cursor;
 
+mod copy_paste;
 mod cursor;
 
 #[derive(Debug)]
@@ -9,6 +10,7 @@ pub struct Editor {
     pub current_file: Option<String>,
     pub cursor: Cursor,
     pub selection_start: Option<Cursor>,
+    pub copy_buffer: Option<Vec<String>>,
 }
 
 #[allow(dead_code)] //?
@@ -20,6 +22,7 @@ impl Editor {
             current_file: None,
             cursor: Cursor(0, 0),
             selection_start: None,
+            copy_buffer: None,
         }
     }
 
@@ -34,6 +37,7 @@ impl Editor {
             current_file: None,
             cursor: Cursor(0, 0),
             selection_start: None,
+            copy_buffer: None,
         }
     }
 
@@ -44,6 +48,7 @@ impl Editor {
             current_file: None,
             cursor: Cursor(0, 0),
             selection_start: None,
+            copy_buffer: None,
         }
     }
 
@@ -60,7 +65,7 @@ impl Editor {
         if self.selection_start.is_some() {
             self.remove_selected();
         }
-        
+
         let after_split = self.lines[self.cursor.0].split_at(self.cursor.1);
         let after_split = (String::from(after_split.0), String::from(after_split.1));
         self.lines[self.cursor.0] = String::from(after_split.0);
@@ -120,9 +125,10 @@ impl Editor {
             if start.0 == end.0 {
                 let line = &self.lines[start.0];
                 self.lines[start.0] =
-                    String::from(String::from(&line[0..start.1]) + &line[end.1+1..]);
+                    String::from(String::from(&line[0..start.1]) + &line[end.1 + 1..]);
             } else {
-                self.lines[end.0] = String::from(&self.lines[start.0][0..start.1]) + &self.lines[end.0][end.1..];
+                self.lines[end.0] =
+                    String::from(&self.lines[start.0][0..start.1]) + &self.lines[end.0][end.1..];
                 self.lines.drain(start.0..end.0);
             }
         }
