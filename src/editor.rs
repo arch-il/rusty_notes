@@ -2,6 +2,7 @@ pub use cursor::Cursor;
 
 mod copy_paste;
 mod cursor;
+mod scroll;
 
 #[derive(Debug)]
 pub struct Editor {
@@ -11,6 +12,7 @@ pub struct Editor {
     pub cursor: Cursor,
     pub selection_start: Option<Cursor>,
     pub copy_buffer: Option<Vec<String>>,
+    pub scroll_offset: (u16, u16),
 }
 
 #[allow(dead_code)] //?
@@ -23,6 +25,7 @@ impl Editor {
             cursor: Cursor(0, 0),
             selection_start: None,
             copy_buffer: None,
+            scroll_offset: (0, 0),
         }
     }
 
@@ -38,6 +41,7 @@ impl Editor {
             cursor: Cursor(0, 0),
             selection_start: None,
             copy_buffer: None,
+            scroll_offset: (0, 0),
         }
     }
 
@@ -49,6 +53,7 @@ impl Editor {
             cursor: Cursor(0, 0),
             selection_start: None,
             copy_buffer: None,
+            scroll_offset: (0, 0),
         }
     }
 

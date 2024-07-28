@@ -27,6 +27,8 @@ impl Editor {
             self.cursor.0 -= 1;
             self.cursor.1 = self.lines[self.cursor.0].len();
         }
+
+        self.focus_scroll_on_cursor();
     }
 
     pub fn move_right(&mut self, shift: bool) {
@@ -50,6 +52,8 @@ impl Editor {
             self.cursor.0 += 1;
             self.cursor.1 = 0;
         }
+
+        self.focus_scroll_on_cursor();
     }
 
     pub fn move_up(&mut self, shift: bool) {
@@ -73,6 +77,8 @@ impl Editor {
                 self.cursor.1 = line_len;
             }
         }
+
+        self.focus_scroll_on_cursor();
     }
 
     pub fn move_down(&mut self, shift: bool) {
@@ -96,6 +102,8 @@ impl Editor {
                 self.cursor.1 = line_len;
             }
         }
+        
+        self.focus_scroll_on_cursor();
     }
 
     pub fn move_left_word(&mut self, shift: bool) {

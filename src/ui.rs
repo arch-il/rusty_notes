@@ -33,7 +33,9 @@ pub fn ui(f: &mut Frame, editor: &Editor) {
 
     add_line_numbers(&mut lines);
 
-    let paragraph = Paragraph::new(lines).block(block);
+    let paragraph = Paragraph::new(lines)
+        .block(block)
+        .scroll(editor.scroll_offset);
     f.render_widget(paragraph, f.size());
 }
 

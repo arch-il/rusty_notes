@@ -50,6 +50,8 @@ fn ctrl_input(editor: &mut Editor, key_code: &KeyCode, shift: bool) {
 
 		KeyCode::Left => editor.move_left_word(shift),
 		KeyCode::Right => editor.move_right_word(shift),
+		KeyCode::Up => editor.scroll_up(),
+		KeyCode::Down => editor.scroll_down(),
 
 		_ => (),
 	}
