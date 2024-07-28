@@ -1,14 +1,10 @@
 use ratatui::{
-    style::Stylize,
-    symbols::border,
-    text::{Line, Span},
-    widgets::{Block, Borders, Paragraph},
-    Frame,
+    layout::Margin, style::Stylize, symbols::border, text::{Line, Span}, widgets::{Block, Borders, Paragraph}, Frame
 };
 
 use crate::editor::{Cursor, Editor};
 
-pub fn ui(f: &mut Frame, editor: &Editor) {
+pub fn ui(f: &mut Frame, editor: &mut Editor) {
     let block = Block::default()
         .borders(Borders::ALL)
         .border_set(border::ROUNDED)
@@ -37,6 +33,9 @@ pub fn ui(f: &mut Frame, editor: &Editor) {
         .block(block)
         .scroll(editor.scroll_offset);
     f.render_widget(paragraph, f.size());
+    
+    let inner_rect = f.size().inner(Margin { vertical: 1, horizontal: 1 });
+    editor.screen_size = (inner_rect.height, inner_rect.width); //? temp
 }
 
 fn highlight_cursor(lines: &mut Vec<Line>, cursor: &Cursor) {

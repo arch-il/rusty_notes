@@ -13,6 +13,7 @@ pub struct Editor {
     pub selection_start: Option<Cursor>,
     pub copy_buffer: Option<Vec<String>>,
     pub scroll_offset: (u16, u16),
+    pub screen_size: (u16, u16),
 }
 
 #[allow(dead_code)] //?
@@ -26,6 +27,7 @@ impl Editor {
             selection_start: None,
             copy_buffer: None,
             scroll_offset: (0, 0),
+            screen_size: (0, 0),
         }
     }
 
@@ -42,6 +44,7 @@ impl Editor {
             selection_start: None,
             copy_buffer: None,
             scroll_offset: (0, 0),
+            screen_size: (0, 0),
         }
     }
 
@@ -54,6 +57,7 @@ impl Editor {
             selection_start: None,
             copy_buffer: None,
             scroll_offset: (0, 0),
+            screen_size: (0, 0),
         }
     }
 

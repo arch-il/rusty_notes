@@ -20,7 +20,7 @@ fn main() -> io::Result<()> {
     let mut editor = Editor::from_string(text);
 
     while !editor.exit {
-        terminal.draw(|f| { ui(f, &editor) })?;
+        terminal.draw(|f| { ui(f, &mut editor) })?;
 
         take_input(&mut editor);
     }
