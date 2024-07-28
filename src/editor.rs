@@ -68,6 +68,8 @@ impl Editor {
 
         self.lines[self.cursor.0].insert(self.cursor.1, c);
         self.cursor.1 += 1;
+        
+        self.focus_scroll_on_cursor();
     }
 
     pub fn enter(&mut self) {
@@ -82,6 +84,8 @@ impl Editor {
         self.cursor.1 = 0;
         self.lines
             .insert(self.cursor.0, String::from(after_split.1));
+
+        self.focus_scroll_on_cursor();
     }
 
     pub fn backspace(&mut self) {
@@ -100,6 +104,8 @@ impl Editor {
                 self.lines[self.cursor.0].clone() + &self.lines[self.cursor.0 + 1];
             self.lines.remove(self.cursor.0 + 1);
         }
+
+        self.focus_scroll_on_cursor();
     }
 
     pub fn delete(&mut self) {
@@ -140,6 +146,8 @@ impl Editor {
                     String::from(&self.lines[start.0][0..start.1]) + &self.lines[end.0][end.1..];
                 self.lines.drain(start.0..end.0);
             }
+
+            self.focus_scroll_on_cursor();
         }
     }
 }

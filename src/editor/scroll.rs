@@ -16,6 +16,14 @@ impl Editor {
             self.scroll_offset.0 
 				= (self.cursor.0 + SCROLL_DISTANCE) as u16 - self.screen_size.0;
         }
+
+        if self.cursor.1 + 4 < self.scroll_offset.1 as usize + SCROLL_DISTANCE
+            && self.cursor.1 >= SCROLL_DISTANCE - 4
+        {
+            self.scroll_offset.1 = (self.cursor.1 + 4 - SCROLL_DISTANCE) as u16;
+        } else if self.cursor.1 >= (self.screen_size.1 + self.scroll_offset.1) as usize {
+            self.scroll_offset.1 = self.cursor.1 as u16 - self.screen_size.1 + 1;
+        }
     }
 
     pub fn scroll_up(&mut self) {

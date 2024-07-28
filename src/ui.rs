@@ -29,13 +29,17 @@ pub fn ui(f: &mut Frame, editor: &mut Editor) {
 
     add_line_numbers(&mut lines);
 
+    let inner_rect = f.size().inner(Margin { vertical: 1, horizontal: 1 });
+    editor.screen_size = (
+        inner_rect.height, 
+        inner_rect.width - 2 - lines.len().to_string().len() as u16
+    ); //? temp
+    
     let paragraph = Paragraph::new(lines)
         .block(block)
         .scroll(editor.scroll_offset);
     f.render_widget(paragraph, f.size());
     
-    let inner_rect = f.size().inner(Margin { vertical: 1, horizontal: 1 });
-    editor.screen_size = (inner_rect.height, inner_rect.width); //? temp
 }
 
 fn highlight_cursor(lines: &mut Vec<Line>, cursor: &Cursor) {

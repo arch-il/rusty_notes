@@ -146,6 +146,8 @@ impl Editor {
         } else {
             self.cursor.1 = 0;
         }
+
+        self.focus_scroll_on_cursor();
     }
 
     pub fn move_right_word(&mut self, shift: bool) {
@@ -191,6 +193,8 @@ impl Editor {
         } else {
             self.cursor.1 = size;
         }
+
+        self.focus_scroll_on_cursor();
     }
 }
 
