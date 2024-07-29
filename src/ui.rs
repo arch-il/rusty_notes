@@ -1,16 +1,12 @@
 use ratatui::{
-    layout::{Constraint, Direction, Layout, Margin},
-    style::Stylize,
-    symbols::border,
-    text::{Line, Span},
-    widgets::{Block, Borders, Paragraph},
+    layout::{Constraint, Direction, Layout},
     Frame,
 };
 
 mod calendar;
 mod editor;
 
-use crate::editor::{Cursor, Editor};
+use crate::editor::Editor;
 
 pub fn ui(f: &mut Frame, editor: &mut Editor) {
     let chunks = Layout::default()

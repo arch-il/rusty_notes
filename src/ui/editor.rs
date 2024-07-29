@@ -112,7 +112,7 @@ fn add_line_numbers(lines: &mut Vec<Line>) {
         .iter_mut()
         .enumerate()
         .map(|(i, line)| {
-            let mut temp = vec![Span::raw(format!("{:>max_width$} ", i + 1)).green()];
+            let mut temp = vec![Span::raw(format!("{:>max_width$} ", i + 1)).bold().green()];
             temp.append(&mut line.spans);
             Line::from(temp)
         })
