@@ -3,7 +3,7 @@ use ratatui::{
     layout::{Alignment, Rect},
     style::Stylize,
     symbols::border,
-    text::Line,
+    text::{Line, Span},
     widgets::{Block, Borders, Paragraph, Wrap},
     Frame,
 };
@@ -35,11 +35,15 @@ pub fn draw_calendar(f: &mut Frame, rect: &Rect) {
         .unwrap()
         .day();
 
-    let mut line = format!("{:<start_offset$}", "");
+    let mut line = Line::from(format!("{:<start_offset$}", ""));
     for day in 0..num_of_days {
-        line += &format!("{:>2} ", day + 1);
+		let mut span = Span::from(format!("{:>2} ", day + 1));
+		if day == now.day0() {
+			span = span.bold().red();
+		}
+		line.spans.push(span);
     }
-    lines.push(Line::from(line));
+    lines.push(line);
 
     let paragraph = Paragraph::new(lines)
         .block(block)
