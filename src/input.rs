@@ -28,20 +28,22 @@ fn editor_input(editor: &mut Editor, key_event: &KeyEvent) {
 	} else {
 		normal_input(editor, &key_event.code, shift);
 	}
+
+	editor.focus_scroll_on_cursor();
 }
 
 fn normal_input(editor: &mut Editor, key_code: &KeyCode, shift: bool) {
 	match key_code {
-		KeyCode::Char(c) => editor.insert_char(*c),
+		KeyCode::Char(c) => editor.text.insert_char(*c),
 
-		KeyCode::Enter => editor.enter(),
-		KeyCode::Backspace => editor.backspace(),
-		KeyCode::Delete => editor.delete(),
+		KeyCode::Enter => editor.text.enter(),
+		KeyCode::Backspace => editor.text.backspace(),
+		KeyCode::Delete => editor.text.delete(),
 		
-		KeyCode::Left => editor.move_left(shift),
-		KeyCode::Right => editor.move_right(shift),
-		KeyCode::Up => editor.move_up(shift),
-		KeyCode::Down => editor.move_down(shift),
+		KeyCode::Left => editor.text.move_left(shift),
+		KeyCode::Right => editor.text.move_right(shift),
+		KeyCode::Up => editor.text.move_up(shift),
+		KeyCode::Down => editor.text.move_down(shift),
 
 		KeyCode::Esc => editor.state = State::Exit,
 		_ => (),
@@ -52,14 +54,14 @@ fn ctrl_input(editor: &mut Editor, key_code: &KeyCode, shift: bool) {
 	match key_code {
 		KeyCode::Char('q') => editor.state = State::Exit,
 
-		KeyCode::Char('c') => editor.copy(),
-		KeyCode::Char('p') => editor.paste(),
-		KeyCode::Char('x') => editor.cut(),
+		KeyCode::Char('c') => editor.text.copy(),
+		KeyCode::Char('p') => editor.text.paste(),
+		KeyCode::Char('x') => editor.text.cut(),
 
 		KeyCode::Char('/') => editor.state = State::Search(Search::new()),
 
-		KeyCode::Left => editor.move_left_word(shift),
-		KeyCode::Right => editor.move_right_word(shift),
+		KeyCode::Left => editor.text.move_left_word(shift),
+		KeyCode::Right => editor.text.move_right_word(shift),
 		KeyCode::Up => editor.scroll_up(),
 		KeyCode::Down => editor.scroll_down(),
 

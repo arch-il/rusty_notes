@@ -1,11 +1,11 @@
 use std::cmp::Ordering;
 
-use super::Editor;
+use super::text::Text;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Cursor(pub usize, pub usize);
 
-impl Editor {
+impl Text {
     pub fn move_left(&mut self, shift: bool) {
         if !shift {
             if let Some(start) = self.selection_start {
@@ -28,7 +28,7 @@ impl Editor {
             self.cursor.1 = self.lines[self.cursor.0].len();
         }
 
-        self.focus_scroll_on_cursor();
+        self.focus = true;
     }
 
     pub fn move_right(&mut self, shift: bool) {
@@ -53,7 +53,7 @@ impl Editor {
             self.cursor.1 = 0;
         }
 
-        self.focus_scroll_on_cursor();
+        self.focus = true;
     }
 
     pub fn move_up(&mut self, shift: bool) {
@@ -78,7 +78,7 @@ impl Editor {
             }
         }
 
-        self.focus_scroll_on_cursor();
+        self.focus = true;
     }
 
     pub fn move_down(&mut self, shift: bool) {
@@ -103,7 +103,7 @@ impl Editor {
             }
         }
         
-        self.focus_scroll_on_cursor();
+        self.focus = true;
     }
 
     pub fn move_left_word(&mut self, shift: bool) {
@@ -147,7 +147,7 @@ impl Editor {
             self.cursor.1 = 0;
         }
 
-        self.focus_scroll_on_cursor();
+        self.focus = true;
     }
 
     pub fn move_right_word(&mut self, shift: bool) {
@@ -194,7 +194,7 @@ impl Editor {
             self.cursor.1 = size;
         }
 
-        self.focus_scroll_on_cursor();
+        self.focus = true;
     }
 }
 

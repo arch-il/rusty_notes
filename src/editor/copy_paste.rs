@@ -1,6 +1,6 @@
-use super::Editor;
+use super::text::Text;
 
-impl Editor {
+impl Text {
     pub fn copy(&mut self) {
         if let Some(selection_start) = self.selection_start {
 			let mut start = self.cursor;

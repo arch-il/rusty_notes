@@ -1,6 +1,6 @@
 use super::Search;
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum State {
 	Edit,
 	Exit,

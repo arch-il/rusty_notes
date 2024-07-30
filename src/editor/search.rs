@@ -1,12 +1,15 @@
-#[derive(Clone, Debug, PartialEq, Eq)]
+use super::text::Text;
+
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct Search {
-	pub text: String,
+	pub text: Text,
 }
 
 impl Search {
 	pub fn new() -> Search {
 		Search {
-			text: String::new(),
+			text: Text::new(),
 		}
 	}
 }

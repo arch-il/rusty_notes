@@ -20,16 +20,17 @@ pub fn draw_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
         });
 
     let mut lines = editor
+        .text
         .lines
         .clone()
         .iter()
         .map(|line| Line::from(format!("{} ", line)))
         .collect::<Vec<_>>();
 
-    if let Some(selection_start) = &editor.selection_start {
-        highlight_selection(&mut lines, &editor.cursor, selection_start)
+    if let Some(selection_start) = &editor.text.selection_start {
+        highlight_selection(&mut lines, &editor.text.cursor, selection_start)
     } else {
-        highlight_cursor(&mut lines, &editor.cursor);
+        highlight_cursor(&mut lines, &editor.text.cursor);
     }
 
     add_line_numbers(&mut lines);
