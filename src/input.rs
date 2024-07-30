@@ -1,6 +1,6 @@
-use crossterm::event::{self, Event, KeyCode, KeyEventKind, KeyModifiers};
+use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 
-use crate::editor::{Editor, State};
+use crate::editor::{Editor, Search, State};
 
 pub fn take_input(editor: &mut Editor) {
 	match event::read().unwrap() {
@@ -9,16 +9,24 @@ pub fn take_input(editor: &mut Editor) {
 				return;
 			}
 			
-			let shift = key_event.modifiers.contains(KeyModifiers::SHIFT);
-			
-			if key_event.modifiers.contains(KeyModifiers::CONTROL) {
-				ctrl_input(editor, &key_event.code, shift);
-			} else {
-				normal_input(editor, &key_event.code, shift);
+			match editor.state {
+				State::Edit => editor_input(editor, &key_event),
+				State::Search(_) => search_input(editor, &key_event),
+				_ => (),
 			}
 
 		} 
 		_ => (),
+	}
+}
+
+fn editor_input(editor: &mut Editor, key_event: &KeyEvent) {
+	let shift = key_event.modifiers.contains(KeyModifiers::SHIFT);
+			
+	if key_event.modifiers.contains(KeyModifiers::CONTROL) {
+		ctrl_input(editor, &key_event.code, shift);
+	} else {
+		normal_input(editor, &key_event.code, shift);
 	}
 }
 
@@ -48,11 +56,20 @@ fn ctrl_input(editor: &mut Editor, key_code: &KeyCode, shift: bool) {
 		KeyCode::Char('p') => editor.paste(),
 		KeyCode::Char('x') => editor.cut(),
 
+		KeyCode::Char('/') => editor.state = State::Search(Search::new()),
+
 		KeyCode::Left => editor.move_left_word(shift),
 		KeyCode::Right => editor.move_right_word(shift),
 		KeyCode::Up => editor.scroll_up(),
 		KeyCode::Down => editor.scroll_down(),
 
+		_ => (),
+	}
+}
+
+fn search_input(editor: &mut Editor, key_event: &KeyEvent) {
+	match key_event.code {
+		KeyCode::Esc => editor.state = State::Edit,
 		_ => (),
 	}
 }

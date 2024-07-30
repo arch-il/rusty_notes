@@ -3,9 +3,11 @@ pub use cursor::Cursor;
 mod copy_paste;
 mod cursor;
 mod scroll;
+mod search;
 mod state;
 
 pub use state::State;
+pub use search::Search;
 
 #[derive(Debug)]
 pub struct Editor {
