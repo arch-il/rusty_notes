@@ -1,5 +1,6 @@
 use std::{fs, io};
 
+use editor::State;
 use input::take_input;
 
 mod editor;
@@ -19,7 +20,7 @@ fn main() -> io::Result<()> {
     let text = fs::read_to_string(file_name)?;
     let mut editor = Editor::from_string(text);
 
-    while !editor.exit {
+    while editor.state != State::Exit {
         terminal.draw(|f| { ui(f, &mut editor) })?;
 
         take_input(&mut editor);

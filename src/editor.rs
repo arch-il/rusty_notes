@@ -3,10 +3,13 @@ pub use cursor::Cursor;
 mod copy_paste;
 mod cursor;
 mod scroll;
+mod state;
+
+pub use state::State;
 
 #[derive(Debug)]
 pub struct Editor {
-    pub exit: bool, //? temporary
+    pub state: State,
     pub lines: Vec<String>,
     pub current_file: Option<String>,
     pub cursor: Cursor,
@@ -20,7 +23,7 @@ pub struct Editor {
 impl Editor {
     pub fn new(lines: Vec<String>) -> Editor {
         Editor {
-            exit: false,
+            state: State::Edit,
             lines,
             current_file: None,
             cursor: Cursor(0, 0),
@@ -37,7 +40,7 @@ impl Editor {
             .map(|line| line.to_string())
             .collect::<Vec<_>>();
         Editor {
-            exit: false,
+            state: State::Edit,
             lines,
             current_file: None,
             cursor: Cursor(0, 0),
@@ -50,7 +53,7 @@ impl Editor {
 
     pub fn default() -> Editor {
         Editor {
-            exit: false,
+            state: State::Edit,
             lines: Vec::new(),
             current_file: None,
             cursor: Cursor(0, 0),

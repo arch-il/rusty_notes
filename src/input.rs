@@ -1,6 +1,6 @@
 use crossterm::event::{self, Event, KeyCode, KeyEventKind, KeyModifiers};
 
-use crate::editor::Editor;
+use crate::editor::{Editor, State};
 
 pub fn take_input(editor: &mut Editor) {
 	match event::read().unwrap() {
@@ -35,14 +35,14 @@ fn normal_input(editor: &mut Editor, key_code: &KeyCode, shift: bool) {
 		KeyCode::Up => editor.move_up(shift),
 		KeyCode::Down => editor.move_down(shift),
 
-		KeyCode::Esc => editor.exit = true,
+		KeyCode::Esc => editor.state = State::Exit,
 		_ => (),
 	}
 }
 
 fn ctrl_input(editor: &mut Editor, key_code: &KeyCode, shift: bool) {
 	match key_code {
-		KeyCode::Char('q') => editor.exit = true,
+		KeyCode::Char('q') => editor.state = State::Exit,
 
 		KeyCode::Char('c') => editor.copy(),
 		KeyCode::Char('p') => editor.paste(),
