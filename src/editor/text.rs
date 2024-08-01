@@ -12,7 +12,7 @@ pub struct Text {
 impl Text {
 	pub fn new() -> Text {
 		Text {
-			lines: Vec::new(),
+			lines: vec![String::new()],
 			cursor: Cursor(0, 0),
 			selection_start: None,
 			copy_buffer: None,

@@ -9,7 +9,7 @@ mod text;
 
 pub use state::State;
 pub use search::Search;
-use text::Text;
+pub use text::Text;
 
 #[derive(Debug)]
 pub struct Editor {
