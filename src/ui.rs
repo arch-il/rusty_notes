@@ -24,7 +24,7 @@ pub fn ui(f: &mut Frame, editor: &mut Editor) {
                 .constraints([Constraint::Min(1), Constraint::Length(1)])
                 .split(chunks[0]);
             editor::draw_editor(f, &search_chunks[0], editor);
-            search::draw_search(f, &search_chunks[1], editor, &search);
+            search::draw_search(f, &search_chunks[1], &search);
         },
         _ => (),
     }

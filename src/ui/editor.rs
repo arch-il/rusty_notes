@@ -7,7 +7,7 @@ use ratatui::{
     Frame,
 };
 
-use crate::editor::{Cursor, Editor};
+use crate::editor::{Cursor, Editor, State};
 
 pub fn draw_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
     let editor_block = Block::default()
@@ -31,6 +31,10 @@ pub fn draw_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
         highlight_selection(&mut lines, &editor.text.cursor, selection_start)
     } else {
         highlight_cursor(&mut lines, &editor.text.cursor);
+    }
+
+    if let State::Search(search) = &editor.state {
+        highlight_search(&mut lines, &search.text.lines[0]);
     }
 
     add_line_numbers(&mut lines);
@@ -80,7 +84,7 @@ fn highlight_selection(lines: &mut Vec<Line>, cursor: &Cursor, selection_start: 
 
         lines[start.0] = Line::from(vec![
             Span::raw(String::from(left)),
-            Span::raw(cursor_str).black().on_white(),
+            Span::raw(cursor_str).black().on_light_blue(),
             Span::raw(String::from(right)),
         ]);
         return;
@@ -91,18 +95,18 @@ fn highlight_selection(lines: &mut Vec<Line>, cursor: &Cursor, selection_start: 
         Span::raw(String::from(&start_line[0..start.1])),
         Span::raw(String::from(&start_line[start.1..]))
             .black()
-            .on_white(),
+            .on_light_blue(),
     ]);
 
     for line_id in (start.0..end.0).skip(1) {
-        lines[line_id] = Line::from(Span::raw(lines[line_id].to_string()).black().on_white());
+        lines[line_id] = Line::from(Span::raw(lines[line_id].to_string()).black().on_light_blue());
     }
 
     let end_line = lines[end.0].to_string();
     lines[end.0] = Line::from(vec![
         Span::raw(String::from(&end_line[0..end.1]))
             .black()
-            .on_white(),
+            .on_light_blue(),
         Span::raw(String::from(&end_line[end.1..])),
     ]);
 }
@@ -118,4 +122,43 @@ fn add_line_numbers(lines: &mut Vec<Line>) {
             Line::from(temp)
         })
         .collect();
+}
+
+fn highlight_search(lines: &mut Vec<Line>, search: &str) {
+    if search.len() == 0 {
+        return;
+    }
+    for line in lines.iter_mut() {
+        let mut spans = Vec::new();
+        let line_str = line.to_string();
+        let mut last_pos = 0;
+        let mut found = false;
+        while let Some(pos) = line_str[last_pos..].find(search) {
+            if found {
+                spans.push(Span::raw(String::from(
+                    &line_str[(last_pos + search.len() - 1)..(last_pos + pos)],
+                )));
+            } else {
+                spans.push(Span::raw(String::from(
+                    &line_str[0..(last_pos + pos)],
+                )));
+            }
+            spans.push(
+                Span::raw(String::from(
+                    &line_str[(last_pos + pos)..(last_pos + pos + search.len())],
+                ))
+                .black()
+                .on_green(),
+            );
+
+            last_pos += pos + 1;
+            found = true;
+        }
+        if found {
+            spans.push(Span::raw(String::from(
+                &line_str[(last_pos + search.len() - 1)..],
+            )));
+            line.spans = spans;
+        }
+    }
 }
