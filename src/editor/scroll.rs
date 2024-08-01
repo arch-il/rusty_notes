@@ -17,8 +17,8 @@ impl Editor {
         } else if self.text.cursor.0 as u16
             > self.scroll_offset.0 + self.screen_size.0 - SCROLL_DISTANCE as u16
         {
-            self.scroll_offset.0 
-				= (self.text.cursor.0 + SCROLL_DISTANCE) as u16 - self.screen_size.0;
+            self.scroll_offset.0 =
+                (self.text.cursor.0 + SCROLL_DISTANCE) as u16 - self.screen_size.0;
         }
 
         if self.text.cursor.1 + 4 < self.scroll_offset.1 as usize + SCROLL_DISTANCE

@@ -125,9 +125,7 @@ fn add_line_numbers(lines: &mut Vec<Line>) {
 }
 
 fn highlight_search(lines: &mut Vec<Line>, search: &str) {
-    if search.len() == 0 {
-        return;
-    }
+    if search.len() == 0 { return; }
     for line in lines.iter_mut() {
         let mut spans = Vec::new();
         let line_str = line.to_string();

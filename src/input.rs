@@ -43,15 +43,14 @@ fn editor_input(editor: &mut Editor, key_event: &KeyEvent) {
 }
 
 fn search_input(editor: &mut Editor, key_event: &KeyEvent) {
-	if let State::Search(ref mut search) = editor.state {
-		match key_event.code {
-			KeyCode::Esc => editor.state = State::Edit,
-			KeyCode::Enter => (),
-	
-			_ => text_input(&mut search.text, key_event),
-		}
-	}
+    if let State::Search(ref mut search) = editor.state {
+        match key_event.code {
+            KeyCode::Esc => editor.state = State::Edit,
+            KeyCode::Enter => (),
 
+            _ => text_input(&mut search.text, key_event),
+        }
+    }
 }
 
 fn text_input(text: &mut Text, key_event: &KeyEvent) {

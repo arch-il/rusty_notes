@@ -37,11 +37,11 @@ pub fn draw_calendar(f: &mut Frame, rect: &Rect) {
 
     let mut line = Line::from(format!("{:<start_offset$}", ""));
     for day in 0..num_of_days {
-		let mut span = Span::from(format!("{:>2} ", day + 1));
-		if day == now.day0() {
-			span = span.bold().red();
-		}
-		line.spans.push(span);
+        let mut span = Span::from(format!("{:>2} ", day + 1));
+        if day == now.day0() {
+            span = span.bold().red();
+        }
+        line.spans.push(span);
     }
     lines.push(line);
 

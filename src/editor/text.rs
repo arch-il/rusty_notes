@@ -10,38 +10,38 @@ pub struct Text {
 }
 
 impl Text {
-	pub fn new() -> Text {
-		Text {
-			lines: vec![String::new()],
-			cursor: Cursor(0, 0),
-			selection_start: None,
-			copy_buffer: None,
+    pub fn new() -> Text {
+        Text {
+            lines: vec![String::new()],
+            cursor: Cursor(0, 0),
+            selection_start: None,
+            copy_buffer: None,
             focus: false,
-		}
-	}
+        }
+    }
 
-	pub fn from_string(text: String) -> Text {
-		let lines = text
+    pub fn from_string(text: String) -> Text {
+        let lines = text
             .split('\n')
             .map(|line| line.to_string())
             .collect::<Vec<_>>();
-		Text {
-			lines,
-			cursor: Cursor(0, 0),
-			selection_start: None,
-			copy_buffer: None,
+        Text {
+            lines,
+            cursor: Cursor(0, 0),
+            selection_start: None,
+            copy_buffer: None,
             focus: false,
-		}
-	}
+        }
+    }
 
-	pub fn insert_char(&mut self, c: char) {
+    pub fn insert_char(&mut self, c: char) {
         if self.selection_start.is_some() {
             self.remove_selected();
         }
 
         self.lines[self.cursor.0].insert(self.cursor.1, c);
         self.cursor.1 += 1;
-        
+
         self.focus = true;
     }
 

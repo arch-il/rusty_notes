@@ -102,7 +102,7 @@ impl Text {
                 self.cursor.1 = line_len;
             }
         }
-        
+
         self.focus = true;
     }
 

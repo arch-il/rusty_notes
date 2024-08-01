@@ -7,8 +7,8 @@ mod search;
 mod state;
 mod text;
 
-pub use state::State;
 pub use search::Search;
+pub use state::State;
 pub use text::Text;
 
 #[derive(Debug)]
