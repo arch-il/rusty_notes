@@ -1,9 +1,12 @@
 use ratatui::{
-    layout::{Margin, Rect},
+    layout::{Alignment, Margin, Rect},
     style::Stylize,
     symbols::border,
     text::{Line, Span},
-    widgets::{Block, Borders, Paragraph},
+    widgets::{
+        block::Title,
+        Block, Borders, Paragraph,
+    },
     Frame,
 };
 
@@ -13,11 +16,8 @@ pub fn draw_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
     let editor_block = Block::default()
         .borders(Borders::ALL)
         .border_set(border::ROUNDED)
-        .title(if let Some(file_name) = &editor.current_file {
-            &file_name
-        } else {
-            ""
-        });
+        .title(editor.current_file.clone().unwrap_or_default())
+        .title(Title::from("^_^").alignment(Alignment::Right));
 
     let mut lines = editor
         .text
@@ -99,7 +99,11 @@ fn highlight_selection(lines: &mut Vec<Line>, cursor: &Cursor, selection_start: 
     ]);
 
     for line_id in (start.0..end.0).skip(1) {
-        lines[line_id] = Line::from(Span::raw(lines[line_id].to_string()).black().on_light_blue());
+        lines[line_id] = Line::from(
+            Span::raw(lines[line_id].to_string())
+                .black()
+                .on_light_blue(),
+        );
     }
 
     let end_line = lines[end.0].to_string();
@@ -125,7 +129,9 @@ fn add_line_numbers(lines: &mut Vec<Line>) {
 }
 
 fn highlight_search(lines: &mut Vec<Line>, search: &str) {
-    if search.len() == 0 { return; }
+    if search.len() == 0 {
+        return;
+    }
     for line in lines.iter_mut() {
         let mut spans = Vec::new();
         let line_str = line.to_string();
@@ -137,9 +143,7 @@ fn highlight_search(lines: &mut Vec<Line>, search: &str) {
                     &line_str[(last_pos + search.len() - 1)..(last_pos + pos)],
                 )));
             } else {
-                spans.push(Span::raw(String::from(
-                    &line_str[0..(last_pos + pos)],
-                )));
+                spans.push(Span::raw(String::from(&line_str[0..(last_pos + pos)])));
             }
             spans.push(
                 Span::raw(String::from(
