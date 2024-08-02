@@ -3,10 +3,7 @@ use ratatui::{
     style::Stylize,
     symbols::border,
     text::{Line, Span},
-    widgets::{
-        block::Title,
-        Block, Borders, Paragraph,
-    },
+    widgets::{block::Title, Block, Borders, Paragraph},
     Frame,
 };
 
@@ -132,19 +129,22 @@ fn highlight_search(lines: &mut Vec<Line>, search: &str) {
     if search.len() == 0 {
         return;
     }
+
     for line in lines.iter_mut() {
         let mut spans = Vec::new();
         let line_str = line.to_string();
         let mut last_pos = 0;
         let mut found = false;
+
         while let Some(pos) = line_str[last_pos..].find(search) {
+            let mut start = 0;
+            let end = last_pos + pos;
             if found {
-                spans.push(Span::raw(String::from(
-                    &line_str[(last_pos + search.len() - 1)..(last_pos + pos)],
-                )));
-            } else {
-                spans.push(Span::raw(String::from(&line_str[0..(last_pos + pos)])));
+                start = last_pos + search.len() - 1;
             }
+
+            spans.extend(get_spans_in_range(line.spans.clone(), start, end));
+
             spans.push(
                 Span::raw(String::from(
                     &line_str[(last_pos + pos)..(last_pos + pos + search.len())],
@@ -157,10 +157,58 @@ fn highlight_search(lines: &mut Vec<Line>, search: &str) {
             found = true;
         }
         if found {
-            spans.push(Span::raw(String::from(
-                &line_str[(last_pos + search.len() - 1)..],
-            )));
+            spans.extend(get_spans_in_range(
+                line.spans.clone(),
+                last_pos + search.len() - 1,
+                line.to_string().len(),
+            ));
             line.spans = spans;
         }
     }
+}
+
+fn get_spans_in_range<'a>(from_spans: Vec<Span<'a>>, start: usize, end: usize) -> Vec<Span<'a>> {
+    let mut i = 0;
+    let mut len = 0;
+    let mut result = Vec::new();
+    loop {
+        if i >= from_spans.len() {
+            break;
+        }
+        let span_len = from_spans[i].to_string().len();
+        let mut from = None;
+        let mut to = None;
+        if len < start {
+            if len + span_len > start {
+                from = Some(start - len);
+            } else {
+                len += span_len;
+                i += 1;
+                continue;
+            }
+        }
+        if len + span_len >= end {
+            to = Some(end - len);
+        }
+        if to.is_some() {
+            result.push(
+                Span::raw(String::from(
+                    &from_spans[i].to_string()[from.unwrap_or(0)..to.unwrap()],
+                ))
+                .style(from_spans[i].style),
+            );
+            break;
+        } else if from.is_some() {
+            result.push(
+                Span::raw(String::from(&from_spans[i].to_string()[from.unwrap()..]))
+                    .style(from_spans[i].style),
+            );
+        } else {
+            result.push(from_spans[i].clone());
+        }
+
+        len += span_len;
+        i += 1;
+    }
+    result
 }
