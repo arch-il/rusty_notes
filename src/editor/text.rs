@@ -81,6 +81,27 @@ impl Text {
         self.focus = true;
     }
 
+    pub fn backspace_word(&mut self) {
+        if self.selection_start.is_some() {
+            self.remove_selected();
+            return;
+        }
+
+        if self.cursor.1 != 0 {
+            let temp = self.get_biggest_space();
+            self.lines[self.cursor.0].replace_range(temp..self.cursor.1, "");
+            self.cursor.1 = temp;
+        } else if self.cursor.0 != 0 {
+            self.cursor.0 -= 1;
+            self.cursor.1 = self.lines[self.cursor.0].len();
+            self.lines[self.cursor.0] =
+                self.lines[self.cursor.0].clone() + &self.lines[self.cursor.0 + 1];
+            self.lines.remove(self.cursor.0 + 1);
+        }
+
+        self.focus = true;
+    }
+
     pub fn delete(&mut self) {
         if self.selection_start.is_some() {
             self.remove_selected();
@@ -89,6 +110,22 @@ impl Text {
 
         if self.cursor.1 < self.lines[self.cursor.0].len() {
             self.lines[self.cursor.0].remove(self.cursor.1);
+        } else if self.cursor.0 < self.lines.len() - 1 {
+            self.lines[self.cursor.0] =
+                self.lines[self.cursor.0].clone() + &self.lines[self.cursor.0 + 1];
+            self.lines.remove(self.cursor.0 + 1);
+        }
+    }
+
+    pub fn delete_word(&mut self) {
+        if self.selection_start.is_some() {
+            self.remove_selected();
+            return;
+        }
+
+        if self.cursor.1 < self.lines[self.cursor.0].len() {
+            let temp = self.get_smallest_space();
+            self.lines[self.cursor.0].replace_range(self.cursor.1..temp, "");
         } else if self.cursor.0 < self.lines.len() - 1 {
             self.lines[self.cursor.0] =
                 self.lines[self.cursor.0].clone() + &self.lines[self.cursor.0 + 1];

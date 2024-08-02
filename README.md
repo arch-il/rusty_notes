@@ -10,5 +10,6 @@ my take on minimalist journal app made with ratatui.
 - [ ] wrapping
 - [ ] markdown rendering
 - [ ] side panels
-- [ ] search
+- [x] search
 - [ ] replace
+- [ ] undo/redo

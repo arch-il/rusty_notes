@@ -62,6 +62,9 @@ fn text_input(text: &mut Text, key_event: &KeyEvent) {
             KeyCode::Char('p') => text.paste(),
             KeyCode::Char('x') => text.cut(),
 
+            KeyCode::Backspace => text.backspace_word(),
+            KeyCode::Delete => text.delete_word(),
+
             KeyCode::Left => text.move_left_word(shift),
             KeyCode::Right => text.move_right_word(shift),
 
