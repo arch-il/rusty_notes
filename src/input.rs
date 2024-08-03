@@ -1,6 +1,6 @@
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 
-use crate::editor::{Editor, Search, State, Text};
+use crate::editor::{Editor, Search, EditorState, Text};
 
 pub fn take_input(editor: &mut Editor) {
     match event::read().unwrap() {
@@ -10,8 +10,8 @@ pub fn take_input(editor: &mut Editor) {
             }
 
             match editor.state {
-                State::Edit => editor_input(editor, &key_event),
-                State::Search(_) => search_input(editor, &key_event),
+                EditorState::Edit => editor_input(editor, &key_event),
+                EditorState::Search(_) => search_input(editor, &key_event),
                 _ => (),
             }
         }
@@ -22,9 +22,9 @@ pub fn take_input(editor: &mut Editor) {
 fn editor_input(editor: &mut Editor, key_event: &KeyEvent) {
     if key_event.modifiers.contains(KeyModifiers::CONTROL) {
         match key_event.code {
-            KeyCode::Char('q') => editor.state = State::Exit,
+            KeyCode::Char('q') => editor.state = EditorState::Exit,
 
-            KeyCode::Char('f') => editor.state = State::Search(Search::new()),
+            KeyCode::Char('f') => editor.state = EditorState::Search(Search::new()),
 
             KeyCode::Up => editor.scroll_up(),
             KeyCode::Down => editor.scroll_down(),
@@ -33,7 +33,7 @@ fn editor_input(editor: &mut Editor, key_event: &KeyEvent) {
         }
     } else {
         match key_event.code {
-            KeyCode::Esc => editor.state = State::Exit,
+            KeyCode::Esc => editor.state = EditorState::Exit,
 
             _ => text_input(&mut editor.text, key_event),
         }
@@ -43,9 +43,9 @@ fn editor_input(editor: &mut Editor, key_event: &KeyEvent) {
 }
 
 fn search_input(editor: &mut Editor, key_event: &KeyEvent) {
-    if let State::Search(ref mut search) = editor.state {
+    if let EditorState::Search(ref mut search) = editor.state {
         match key_event.code {
-            KeyCode::Esc => editor.state = State::Edit,
+            KeyCode::Esc => editor.state = EditorState::Edit,
             KeyCode::Enter => (),
 
             _ => text_input(&mut search.text, key_event),

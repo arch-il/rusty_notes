@@ -7,9 +7,9 @@ use ratatui::{
     Frame,
 };
 
-use crate::editor::{Cursor, Editor, State};
+use crate::editor::{Cursor, Editor, EditorState};
 
-pub fn draw_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
+pub fn draw_text_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
     let editor_block = Block::default()
         .borders(Borders::ALL)
         .border_set(border::ROUNDED)
@@ -30,7 +30,7 @@ pub fn draw_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
         highlight_cursor(&mut lines, &editor.text.cursor);
     }
 
-    if let State::Search(search) = &editor.state {
+    if let EditorState::Search(search) = &editor.state {
         highlight_search(&mut lines, &search.text.lines[0]);
     }
 

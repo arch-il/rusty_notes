@@ -1,7 +1,7 @@
 use super::Search;
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum State {
+pub enum EditorState {
 	Edit,
 	Exit,
 	Search(Search),
