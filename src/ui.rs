@@ -14,11 +14,11 @@ mod text_editor;
 use crate::editor::Editor;
 
 pub fn draw_title_screen(f: &mut Frame) {
-    let block = Block::default()
-        .borders(Borders::ALL)
-        .border_set(border::ROUNDED)
-        .title(Title::from("^_^").alignment(Alignment::Right))
-        .green();
+    // let block = Block::default()
+    //     .borders(Borders::ALL)
+    //     .border_set(border::ROUNDED)
+    //     .title(Title::from("^_^").alignment(Alignment::Right))
+    //     .green();
 
     let title = vec![
         "",
@@ -40,9 +40,9 @@ pub fn draw_title_screen(f: &mut Frame) {
         "",
         "",
         "O - Open existing file",
-        "N - Open new file",
-        "C - Open calendar",
-        "X - Exit",
+        "N - Open new file     ",
+        "C - Open calendar     ",
+        "X - Exit              ",
     ];
     let text = title
         .iter()
@@ -53,8 +53,7 @@ pub fn draw_title_screen(f: &mut Frame) {
         )
         .collect::<Vec<_>>();
     let paragraph = Paragraph::new(text)
-        .alignment(Alignment::Center)
-        .block(block);
+        .alignment(Alignment::Center);
 
     f.render_widget(paragraph, f.size());
 }
