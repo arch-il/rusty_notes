@@ -2,7 +2,7 @@
 my take on minimalist journal app made with ratatui.
 ## TODO
 - [x] selection
-- [ ] title screen
+- [x] title screen
 - [ ] calendar
 - [x] copy/paste
 - [x] word jumping
@@ -13,3 +13,5 @@ my take on minimalist journal app made with ratatui.
 - [x] search
 - [ ] replace
 - [ ] undo/redo
+- [ ] stats on title screen
+- [ ] database

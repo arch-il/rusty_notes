@@ -1,8 +1,8 @@
-use crate::editor::Editor;
+use crate::{editor::Editor, title_screen::TitleScreenState};
 
 #[derive(Debug)]
 pub enum State {
-	TitleScreen,
+	TitleScreen(TitleScreenState),
 	Editor(Editor),
 	Exit,
 }

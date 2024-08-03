@@ -1,9 +1,8 @@
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout},
     style::Stylize,
-    symbols::border,
     text::Line,
-    widgets::{block::Title, Block, Borders, Paragraph},
+    widgets::Paragraph,
     Frame,
 };
 
@@ -39,10 +38,10 @@ pub fn draw_title_screen(f: &mut Frame) {
         "",
         "",
         "",
-        "O - Open existing file",
         "N - Open new file     ",
+        "O - Open existing file",
         "C - Open calendar     ",
-        "X - Exit              ",
+        "Q or Esc - Exit       ",
     ];
     let text = title
         .iter()

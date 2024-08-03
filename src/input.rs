@@ -1,8 +1,31 @@
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 
-use crate::editor::{Editor, Search, EditorState, Text};
+use crate::{
+    editor::{Editor, EditorState, Search, Text},
+    title_screen::TitleScreenState,
+};
 
-pub fn take_input(editor: &mut Editor) {
+pub fn take_title_screen_input(state: &mut TitleScreenState) {
+    match event::read().unwrap() {
+        Event::Key(key_event) => {
+            if key_event.kind == KeyEventKind::Release {
+                return;
+            }
+
+            match key_event.code {
+                KeyCode::Char('n') => *state = TitleScreenState::OpenNew,
+                KeyCode::Char('o') => *state = TitleScreenState::OpenExisting,
+                KeyCode::Char('c') => *state = TitleScreenState::Calendar,
+                KeyCode::Char('q') => *state = TitleScreenState::Exit,
+                KeyCode::Esc => *state = TitleScreenState::Exit,
+                _ => (),
+            }
+        }
+        _ => (),
+    }
+}
+
+pub fn take_editor_input(editor: &mut Editor) {
     match event::read().unwrap() {
         Event::Key(key_event) => {
             if key_event.kind == KeyEventKind::Release {
@@ -10,7 +33,7 @@ pub fn take_input(editor: &mut Editor) {
             }
 
             match editor.state {
-                EditorState::Edit => editor_input(editor, &key_event),
+                EditorState::Edit => text_editor_input(editor, &key_event),
                 EditorState::Search(_) => search_input(editor, &key_event),
                 _ => (),
             }
@@ -19,7 +42,7 @@ pub fn take_input(editor: &mut Editor) {
     }
 }
 
-fn editor_input(editor: &mut Editor, key_event: &KeyEvent) {
+fn text_editor_input(editor: &mut Editor, key_event: &KeyEvent) {
     if key_event.modifiers.contains(KeyModifiers::CONTROL) {
         match key_event.code {
             KeyCode::Char('q') => editor.state = EditorState::Exit,
