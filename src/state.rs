@@ -4,6 +4,7 @@ use crate::{editor::Editor, title_screen::TitleScreenState};
 pub enum State {
 	TitleScreen(TitleScreenState),
 	Editor(Editor),
+	Calendar,
 	Exit,
 }
 

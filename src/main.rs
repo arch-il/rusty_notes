@@ -16,13 +16,13 @@ use crate::editor::Editor;
 
 fn main() -> io::Result<()> {
     let mut terminal = terminal::init()?;
-    
+
     // let file_name = "notes/note.md";
     // let text = fs::read_to_string(file_name)?;
     // let temp = Editor::from_string(text);
     // let mut state = State::Editor(temp);
     let mut state = State::TitleScreen(TitleScreenState::None);
-    
+
     while state != State::Exit {
         match state {
             State::TitleScreen(ref mut title_screen_state) => {
@@ -34,17 +34,22 @@ fn main() -> io::Result<()> {
                     TitleScreenState::None => (),
                     TitleScreenState::OpenNew => state = State::Editor(Editor::new()),
                     TitleScreenState::OpenExisting => (), //? todo
-                    TitleScreenState::Calendar => (), //? todo
+                    TitleScreenState::Calendar => state = State::Calendar,
                     TitleScreenState::Exit => state = State::Exit,
                 }
-            },
+            }
             State::Editor(ref mut editor) => {
                 terminal.draw(|f| ui::draw_editor(f, editor))?;
                 take_editor_input(editor);
                 if editor.state == EditorState::Exit {
                     state = State::Exit;
                 }
-            },
+            }
+            State::Calendar => {
+                terminal.draw(|f: &mut ratatui::Frame| {
+                    ui::calendar::draw_calendar_year(f, &f.size())
+                })?;
+            }
             State::Exit => todo!(),
         }
     }

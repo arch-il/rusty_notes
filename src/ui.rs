@@ -6,7 +6,7 @@ use ratatui::{
     Frame,
 };
 
-mod calendar;
+pub mod calendar;
 mod search;
 mod text_editor;
 
@@ -81,5 +81,5 @@ pub fn draw_editor(f: &mut Frame, editor: &mut Editor) {
         .constraints([Constraint::Min(1), Constraint::Length(10)])
         .split(chunks[1]);
 
-    calendar::draw_calendar(f, &side_chunks[1]);
+    calendar::draw_calendar_month(f, &side_chunks[1]);
 }
