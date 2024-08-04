@@ -1,10 +1,11 @@
 use std::io;
 
+use calendar_state::CalendarState;
 use editor::EditorState;
-use input::{take_editor_input, take_title_screen_input};
 use state::State;
 use title_screen::TitleScreenState;
 
+pub mod calendar_state;
 mod editor;
 mod input;
 mod state;
@@ -28,28 +29,32 @@ fn main() -> io::Result<()> {
             State::TitleScreen(ref mut title_screen_state) => {
                 terminal.draw(|f| ui::draw_title_screen(f))?;
 
-                take_title_screen_input(title_screen_state);
+                input::take_title_screen_input(title_screen_state);
 
                 match title_screen_state {
                     TitleScreenState::None => (),
                     TitleScreenState::OpenNew => state = State::Editor(Editor::new()),
                     TitleScreenState::OpenExisting => (), //? todo
-                    TitleScreenState::Calendar => state = State::Calendar,
+                    TitleScreenState::Calendar => state = State::Calendar(CalendarState::Browse),
                     TitleScreenState::Exit => state = State::Exit,
                 }
             }
             State::Editor(ref mut editor) => {
                 terminal.draw(|f| ui::draw_editor(f, editor))?;
-                take_editor_input(editor);
+                input::take_editor_input(editor);
                 if editor.state == EditorState::Exit {
                     state = State::Exit;
                 }
             }
-            State::Calendar => {
-                terminal.draw(|f: &mut ratatui::Frame| {
-                    ui::calendar::draw_calendar_year(f, &f.size())
-                })?;
-            }
+            State::Calendar(ref mut cal_state) => match cal_state {
+                CalendarState::Browse => {
+                    terminal.draw(|f: &mut ratatui::Frame| {
+                        ui::calendar::draw_calendar_year(f, &f.size())
+                    })?;
+                    input::calendar_input(cal_state);
+                }
+                CalendarState::Exit => state = State::Exit,
+            },
             State::Exit => todo!(),
         }
     }

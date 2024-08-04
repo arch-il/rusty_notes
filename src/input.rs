@@ -1,6 +1,7 @@
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 
 use crate::{
+    calendar_state::CalendarState,
     editor::{Editor, EditorState, Search, Text},
     title_screen::TitleScreenState,
 };
@@ -73,6 +74,25 @@ fn search_input(editor: &mut Editor, key_event: &KeyEvent) {
 
             _ => text_input(&mut search.text, key_event),
         }
+    }
+}
+
+pub fn calendar_input(state: &mut CalendarState) {
+    match event::read().unwrap() {
+        Event::Key(key_event) => {
+            if key_event.kind == KeyEventKind::Release {
+                return;
+            }
+
+            match key_event.code {
+                KeyCode::Esc => *state = CalendarState::Exit,
+                KeyCode::Char('q') => *state = CalendarState::Exit,
+
+                _ => (),
+            }
+        }
+
+        _ => (),
     }
 }
 
