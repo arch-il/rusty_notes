@@ -16,13 +16,13 @@ pub fn draw_text_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
         .title(editor.current_file.clone().unwrap_or_default())
         .title(Title::from("^_^").alignment(Alignment::Right));
 
-    let mut lines = editor
+    let mut lines: Vec<Line> = editor
         .text
         .lines
         .clone()
         .iter()
         .map(|line| Line::from(format!("{} ", line)))
-        .collect::<Vec<_>>();
+        .collect();
 
     if let Some(selection_start) = &editor.text.selection_start {
         highlight_selection(&mut lines, &editor.text.cursor, selection_start)

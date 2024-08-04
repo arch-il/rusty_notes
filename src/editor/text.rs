@@ -21,10 +21,7 @@ impl Text {
     }
 
     pub fn from_string(text: String) -> Text {
-        let lines = text
-            .split('\n')
-            .map(|line| line.to_string())
-            .collect::<Vec<_>>();
+        let lines: Vec<String> = text.split('\n').map(|line| line.to_string()).collect();
         Text {
             lines,
             cursor: Cursor(0, 0),

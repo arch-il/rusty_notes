@@ -1,3 +1,5 @@
+use std::iter;
+
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout},
     style::Stylize,
@@ -34,7 +36,10 @@ pub fn draw_title_screen(f: &mut Frame) {
         "   ░        ░           ░            ░ ░                 ░     ░ ░              ░  ░      ░  ",
         "                                     ░ ░                                                     ",
     ];
-    let options = vec![
+    let mut options: Vec<&str> = iter::repeat("")
+        .take(f.size().height as usize / 8)
+        .collect();
+    options.append(&mut vec![
         "",
         "",
         "",
@@ -42,17 +47,13 @@ pub fn draw_title_screen(f: &mut Frame) {
         "O - Open existing file",
         "C - Open calendar     ",
         "Q or Esc - Exit       ",
-    ];
-    let text = title
+    ]);
+    let text: Vec<Line> = title
         .iter()
         .map(|x| Line::from(*x).red())
-        .chain(options
-            .iter()
-            .map(|x| Line::from(*x).blue())
-        )
-        .collect::<Vec<_>>();
-    let paragraph = Paragraph::new(text)
-        .alignment(Alignment::Center);
+        .chain(options.iter().map(|x| Line::from(*x).blue()))
+        .collect();
+    let paragraph = Paragraph::new(text).alignment(Alignment::Center);
 
     f.render_widget(paragraph, f.size());
 }
