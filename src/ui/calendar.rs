@@ -48,7 +48,9 @@ pub fn draw_calendar_year(f: &mut Frame, rect: &Rect, cal_position: &mut Calenda
             );
             let mut paragraph;
             match cal_position.editing {
-                crate::calendar::CurrentlyEditing::Year => todo!(),
+                crate::calendar::CurrentlyEditing::Year => {
+                    paragraph = get_month_paragraph(start, None); //? todo
+                }
                 crate::calendar::CurrentlyEditing::Month => {
                     paragraph = get_month_paragraph(start, None);
                     if start.month() == cal_position.date.month() {

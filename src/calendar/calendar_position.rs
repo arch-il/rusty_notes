@@ -68,4 +68,20 @@ impl CalendarPosition {
             CurrentlyEditing::Day => self.date = self.date.checked_add_days(Days::new(7)).unwrap(),
         }
     }
+
+    pub fn choose_selection(&mut self) {
+        match self.editing {
+            CurrentlyEditing::Year => self.editing = CurrentlyEditing::Month,
+            CurrentlyEditing::Month => self.editing = CurrentlyEditing::Day,
+            CurrentlyEditing::Day => todo!(),
+        }
+    }
+
+    pub fn backtrace_selection(&mut self) {
+        match self.editing {
+            CurrentlyEditing::Year => (),
+            CurrentlyEditing::Month => self.editing = CurrentlyEditing::Year,
+            CurrentlyEditing::Day => self.editing = CurrentlyEditing::Month,
+        }
+    }
 }

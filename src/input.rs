@@ -94,6 +94,9 @@ pub fn take_calendar_input(state: &mut CalendarState) {
                     KeyCode::Down => cal_position.move_down(),
                     KeyCode::Char('j') => cal_position.move_down(),
 
+                    KeyCode::Enter => cal_position.choose_selection(),
+                    KeyCode::Backspace => cal_position.backtrace_selection(),
+
                     KeyCode::Esc => *state = CalendarState::Exit,
                     KeyCode::Char('q') => *state = CalendarState::Exit,
 
