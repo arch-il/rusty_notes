@@ -1,7 +1,7 @@
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 
 use crate::{
-    calendar_state::CalendarState,
+    calendar::CalendarState,
     editor::{Editor, EditorState, Search, Text},
     title_screen::TitleScreenState,
 };

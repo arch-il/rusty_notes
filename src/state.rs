@@ -1,4 +1,4 @@
-use crate::{calendar_state::CalendarState, editor::Editor, title_screen::TitleScreenState};
+use crate::{calendar::CalendarState, editor::Editor, title_screen::TitleScreenState};
 
 #[derive(Debug)]
 pub enum State {

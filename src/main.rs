@@ -1,11 +1,11 @@
 use std::io;
 
-use calendar_state::CalendarState;
+use calendar::{CalendarPosition, CalendarState};
 use editor::EditorState;
 use state::State;
 use title_screen::TitleScreenState;
 
-pub mod calendar_state;
+pub mod calendar;
 mod editor;
 mod input;
 mod state;
@@ -35,7 +35,9 @@ fn main() -> io::Result<()> {
                     TitleScreenState::None => (),
                     TitleScreenState::OpenNew => state = State::Editor(Editor::new()),
                     TitleScreenState::OpenExisting => (), //? todo
-                    TitleScreenState::Calendar => state = State::Calendar(CalendarState::Browse),
+                    TitleScreenState::Calendar => {
+                        state = State::Calendar(CalendarState::Browse(CalendarPosition::new()))
+                    }
                     TitleScreenState::Exit => state = State::Exit,
                 }
             }
@@ -47,9 +49,9 @@ fn main() -> io::Result<()> {
                 }
             }
             State::Calendar(ref mut cal_state) => match cal_state {
-                CalendarState::Browse => {
+                CalendarState::Browse(ref mut cal_position) => {
                     terminal.draw(|f: &mut ratatui::Frame| {
-                        ui::calendar::draw_calendar_year(f, &f.size())
+                        ui::calendar::draw_calendar_year(f, &f.size(), cal_position)
                     })?;
                     input::calendar_input(cal_state);
                 }
