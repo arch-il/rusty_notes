@@ -1,4 +1,4 @@
-use chrono::{DateTime, Local};
+use chrono::{DateTime, Days, Local, Months};
 
 #[derive(Debug)]
 pub struct CalendarPosition {
@@ -18,6 +18,54 @@ impl CalendarPosition {
         Self {
             date: Local::now(),
             editing: CurrentlyEditing::Month,
+        }
+    }
+
+    pub fn move_left(&mut self) {
+        match self.editing {
+            CurrentlyEditing::Year => {
+                self.date = self.date.checked_sub_months(Months::new(12)).unwrap()
+            }
+            CurrentlyEditing::Month => {
+                self.date = self.date.checked_sub_months(Months::new(1)).unwrap()
+            }
+            CurrentlyEditing::Day => self.date = self.date.checked_sub_days(Days::new(1)).unwrap(),
+        }
+    }
+
+    pub fn move_right(&mut self) {
+        match self.editing {
+            CurrentlyEditing::Year => {
+                self.date = self.date.checked_add_months(Months::new(12)).unwrap()
+            }
+            CurrentlyEditing::Month => {
+                self.date = self.date.checked_add_months(Months::new(1)).unwrap()
+            }
+            CurrentlyEditing::Day => self.date = self.date.checked_add_days(Days::new(1)).unwrap(),
+        }
+    }
+
+    pub fn move_up(&mut self) {
+        match self.editing {
+            CurrentlyEditing::Year => {
+                self.date = self.date.checked_sub_months(Months::new(12)).unwrap()
+            }
+            CurrentlyEditing::Month => {
+                self.date = self.date.checked_sub_months(Months::new(4)).unwrap()
+            }
+            CurrentlyEditing::Day => self.date = self.date.checked_sub_days(Days::new(7)).unwrap(),
+        }
+    }
+
+    pub fn move_down(&mut self) {
+        match self.editing {
+            CurrentlyEditing::Year => {
+                self.date = self.date.checked_add_months(Months::new(12)).unwrap()
+            }
+            CurrentlyEditing::Month => {
+                self.date = self.date.checked_add_months(Months::new(4)).unwrap()
+            }
+            CurrentlyEditing::Day => self.date = self.date.checked_add_days(Days::new(7)).unwrap(),
         }
     }
 }

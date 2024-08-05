@@ -23,8 +23,10 @@ pub fn draw_calendar_year(f: &mut Frame, rect: &Rect, cal_position: &mut Calenda
         .constraints([Constraint::Min(8), Constraint::Min(8), Constraint::Min(8)])
         .split(rect.inner(Margin::new(1, 1)));
 
-    let now = Local::now();
-    let mut start = Local.with_ymd_and_hms(now.year(), 1, 1, 0, 0, 0).unwrap();
+    let starting_point = cal_position.date;
+    let mut start = Local
+        .with_ymd_and_hms(starting_point.year(), 1, 1, 0, 0, 0)
+        .unwrap();
 
     for chunk in vertical_chunks.iter() {
         let horizontal_chunks = Layout::default()

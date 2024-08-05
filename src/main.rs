@@ -53,7 +53,7 @@ fn main() -> io::Result<()> {
                     terminal.draw(|f: &mut ratatui::Frame| {
                         ui::calendar::draw_calendar_year(f, &f.size(), cal_position)
                     })?;
-                    input::calendar_input(cal_state);
+                    input::take_calendar_input(cal_state);
                 }
                 CalendarState::Exit => state = State::Exit,
             },

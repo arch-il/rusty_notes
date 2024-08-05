@@ -77,18 +77,28 @@ fn search_input(editor: &mut Editor, key_event: &KeyEvent) {
     }
 }
 
-pub fn calendar_input(state: &mut CalendarState) {
+pub fn take_calendar_input(state: &mut CalendarState) {
     match event::read().unwrap() {
         Event::Key(key_event) => {
             if key_event.kind == KeyEventKind::Release {
                 return;
             }
+            if let CalendarState::Browse(ref mut cal_position) = state {
+                match key_event.code {
+                    KeyCode::Left => cal_position.move_left(),
+                    KeyCode::Char('h') => cal_position.move_left(),
+                    KeyCode::Right => cal_position.move_right(),
+                    KeyCode::Char('l') => cal_position.move_right(),
+                    KeyCode::Up => cal_position.move_up(),
+                    KeyCode::Char('k') => cal_position.move_up(),
+                    KeyCode::Down => cal_position.move_down(),
+                    KeyCode::Char('j') => cal_position.move_down(),
 
-            match key_event.code {
-                KeyCode::Esc => *state = CalendarState::Exit,
-                KeyCode::Char('q') => *state = CalendarState::Exit,
+                    KeyCode::Esc => *state = CalendarState::Exit,
+                    KeyCode::Char('q') => *state = CalendarState::Exit,
 
-                _ => (),
+                    _ => (),
+                }
             }
         }
 
