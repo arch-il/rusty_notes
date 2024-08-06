@@ -13,7 +13,7 @@ pub fn draw_text_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
     let editor_block = Block::default()
         .borders(Borders::ALL)
         .border_set(border::ROUNDED)
-        .title(editor.current_file.clone().unwrap_or_default())
+        .title(editor.creation_date.to_string())
         .title(Title::from("^_^").alignment(Alignment::Right));
 
     let mut lines: Vec<Line> = editor

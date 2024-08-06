@@ -32,7 +32,12 @@ pub fn take_editor_input(editor: &mut Editor) {
             if key_event.kind == KeyEventKind::Release {
                 return;
             }
-
+            if key_event.modifiers.contains(KeyModifiers::CONTROL)
+                && key_event.code == KeyCode::Char('w')
+            {
+                editor.write = true;
+                return;
+            }
             match editor.state {
                 EditorState::Edit => text_editor_input(editor, &key_event),
                 EditorState::Search(_) => search_input(editor, &key_event),

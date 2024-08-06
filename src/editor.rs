@@ -16,10 +16,10 @@ pub use text::Text;
 pub struct Editor {
     pub state: EditorState,
     pub text: Text,
-    pub date: DateTime<Local>,
-    pub current_file: Option<String>,
+    pub creation_date: DateTime<Local>,
     pub scroll_offset: (u16, u16),
     pub screen_size: (u16, u16),
+    pub write: bool,
 }
 
 #[allow(dead_code)] //?
@@ -28,10 +28,10 @@ impl Editor {
         Editor {
             state: EditorState::Edit,
             text: Text::new(),
-            date: Local::now(),
-            current_file: None,
+            creation_date: Local::now(),
             scroll_offset: (0, 0),
             screen_size: (0, 0),
+            write: false,
         }
     }
 
@@ -39,10 +39,10 @@ impl Editor {
         Editor {
             state: EditorState::Edit,
             text: Text::from_string(text),
-            date: Local::now(),
-            current_file: None,
+            creation_date: Local::now(),
             scroll_offset: (0, 0),
             screen_size: (0, 0),
+            write: false,
         }
     }
 
@@ -50,10 +50,10 @@ impl Editor {
         Editor {
             state: EditorState::Edit,
             text: Text::new(),
-            date: Local::now(),
-            current_file: None,
+            creation_date: Local::now(),
             scroll_offset: (0, 0),
             screen_size: (0, 0),
+            write: false,
         }
     }
 }

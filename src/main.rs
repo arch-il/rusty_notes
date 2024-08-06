@@ -1,8 +1,10 @@
 use std::io;
 
 use calendar::{CalendarPosition, CalendarState};
+use chrono::Local;
 use database::Database;
 use editor::EditorState;
+use note::Note;
 use state::State;
 use title_screen::TitleScreenState;
 
@@ -22,10 +24,6 @@ fn main() -> io::Result<()> {
     let mut terminal = terminal::init()?;
 
     let database = Database::new();
-    // let file_name = "notes/note.md";
-    // let text = fs::read_to_string(file_name)?;
-    // let temp = Editor::from_string(text);
-    // let mut state = State::Editor(temp);
     let mut state = State::TitleScreen(TitleScreenState::None);
 
     while state != State::Exit {
@@ -48,6 +46,14 @@ fn main() -> io::Result<()> {
             State::Editor(ref mut editor) => {
                 terminal.draw(|f| ui::draw_editor(f, editor))?;
                 input::take_editor_input(editor);
+                if editor.write {
+                    database.insert_or_create_note(&Note {
+                        id: 0,
+                        text: editor.text.lines.join("\n"),
+                        creation_date: editor.creation_date,
+                        last_edited: Local::now(),
+                    });
+                }
                 if editor.state == EditorState::Exit {
                     state = State::Exit;
                 }
@@ -62,7 +68,7 @@ fn main() -> io::Result<()> {
                 CalendarState::Open(date) => {
                     let note = database.get_or_create_note(&date);
                     let mut editor = Editor::from_string(note.text);
-                    editor.date = *date;
+                    editor.creation_date = *date;
                     state = State::Editor(editor);
                 }
                 CalendarState::Exit => state = State::Exit,
