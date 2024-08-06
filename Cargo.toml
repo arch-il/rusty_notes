@@ -7,3 +7,4 @@ edition = "2021"
 chrono = "0.4.38"
 crossterm = "0.27.0"
 ratatui = "0.27.0"
+rusqlite = { version = "0.32.1", features = ["bundled", "chrono"] }

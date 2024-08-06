@@ -1,13 +1,17 @@
 use std::io;
 
 use calendar::{CalendarPosition, CalendarState};
+use chrono::Local;
+use database::Database;
 use editor::EditorState;
 use state::State;
 use title_screen::TitleScreenState;
 
 pub mod calendar;
+pub mod database;
 mod editor;
 mod input;
+pub mod note;
 mod state;
 mod terminal;
 mod title_screen;
