@@ -94,7 +94,7 @@ fn get_month_paragraph(
 
     let now = Local::now();
 
-    let start_offset = (date.weekday() as i16 - date.day0() as i16 % 7) as usize * 3;
+    let start_offset = ((7 + date.weekday() as i16 - date.day0() as i16 % 7) % 7 * 3) as usize;
     let mut start = Local
         .with_ymd_and_hms(date.year(), date.month(), 1, 0, 0, 0)
         .unwrap();

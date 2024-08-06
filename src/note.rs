@@ -1,6 +1,6 @@
 use chrono::{DateTime, Local};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Note {
     pub id: i32,
     pub text: String,

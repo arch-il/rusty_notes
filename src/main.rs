@@ -1,7 +1,6 @@
 use std::io;
 
 use calendar::{CalendarPosition, CalendarState};
-use chrono::Local;
 use database::Database;
 use editor::EditorState;
 use state::State;
@@ -22,6 +21,7 @@ use crate::editor::Editor;
 fn main() -> io::Result<()> {
     let mut terminal = terminal::init()?;
 
+    let database = Database::new();
     // let file_name = "notes/note.md";
     // let text = fs::read_to_string(file_name)?;
     // let temp = Editor::from_string(text);
@@ -58,6 +58,12 @@ fn main() -> io::Result<()> {
                         ui::calendar::draw_calendar_year(f, &f.size(), cal_position)
                     })?;
                     input::take_calendar_input(cal_state);
+                }
+                CalendarState::Open(date) => {
+                    let note = database.get_or_create_note(&date);
+                    let mut editor = Editor::from_string(note.text);
+                    editor.date = *date;
+                    state = State::Editor(editor);
                 }
                 CalendarState::Exit => state = State::Exit,
             },

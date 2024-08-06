@@ -1,5 +1,4 @@
-use std::error::Error;
-
+use chrono::{DateTime, Local};
 use rusqlite::Connection;
 
 use crate::note::Note;
@@ -10,17 +9,18 @@ pub struct Database {
 
 impl Database {
     pub fn new() -> Self {
-        let conn = Connection::open_in_memory().expect("Failed to create connection");
-        conn.execute(
-            "CREATE TABLE note(
-                id            INTEGER PRIMARY KEY,
-                text          TEXT NOT NULL,
-                creation_date DATETIME NOT NULL,
-                last_edited   DATETIME NOT NULL
-            )",
-            (),
-        )
-        .expect("Failed to create table");
+        // let conn = Connection::open_in_memory().expect("Failed to create connection");
+        let conn = Connection::open("./notes/database.db3").expect("Failed to connect to database");
+        // conn.execute(
+        //     "CREATE TABLE note(
+        //         id            INTEGER PRIMARY KEY,
+        //         text          TEXT NOT NULL,
+        //         creation_date DATETIME NOT NULL,
+        //         last_edited   DATETIME NOT NULL
+        //     )",
+        //     (),
+        // )
+        // .expect("Failed to create table");
 
         Self { conn }
     }
@@ -50,5 +50,23 @@ impl Database {
         .unwrap()
         .map(|note| note.unwrap())
         .collect()
+    }
+
+    pub fn get_or_create_note(&self, date: &DateTime<Local>) -> Note {
+        if let Some(note) = self
+            .get_all_notes()
+            .iter()
+            .find(|note| &note.creation_date == date)
+        {
+            return note.clone();
+        }
+        let note = Note {
+            id: 0,
+            text: String::from(" "),
+            creation_date: date.clone(),
+            last_edited: date.clone(),
+        };
+        self.insert_note(&note);
+        note
     }
 }

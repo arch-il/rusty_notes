@@ -4,6 +4,7 @@ use chrono::{DateTime, Days, Local, Months};
 pub struct CalendarPosition {
     pub date: DateTime<Local>,
     pub editing: CurrentlyEditing,
+    pub open: bool,
 }
 
 #[derive(Debug)]
@@ -18,6 +19,7 @@ impl CalendarPosition {
         Self {
             date: Local::now(),
             editing: CurrentlyEditing::Month,
+            open: false,
         }
     }
 
@@ -73,7 +75,7 @@ impl CalendarPosition {
         match self.editing {
             CurrentlyEditing::Year => self.editing = CurrentlyEditing::Month,
             CurrentlyEditing::Month => self.editing = CurrentlyEditing::Day,
-            CurrentlyEditing::Day => todo!(),
+            CurrentlyEditing::Day => self.open = true,
         }
     }
 

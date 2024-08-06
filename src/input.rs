@@ -84,6 +84,10 @@ pub fn take_calendar_input(state: &mut CalendarState) {
                 return;
             }
             if let CalendarState::Browse(ref mut cal_position) = state {
+                if cal_position.open {
+                    *state = CalendarState::Open(cal_position.date);
+                    return;
+                }
                 match key_event.code {
                     KeyCode::Left => cal_position.move_left(),
                     KeyCode::Char('h') => cal_position.move_left(),
