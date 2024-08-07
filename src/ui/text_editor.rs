@@ -3,7 +3,10 @@ use ratatui::{
     style::Stylize,
     symbols::border,
     text::{Line, Span},
-    widgets::{block::Title, Block, Borders, Paragraph},
+    widgets::{
+        block::{Position, Title},
+        Block, Borders, Paragraph,
+    },
     Frame,
 };
 
@@ -14,7 +17,16 @@ pub fn draw_text_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
         .borders(Borders::ALL)
         .border_set(border::ROUNDED)
         .title(editor.creation_date.format("%d/%m/%Y").to_string())
-        .title(Title::from("^_^").alignment(Alignment::Right));
+        .title(Title::from("^_^").alignment(Alignment::Right))
+        .title(
+            Title::from(format!(
+                "{}:{}",
+                editor.text.cursor.0 + 1,
+                editor.text.cursor.1 + 1
+            ))
+            .position(Position::Bottom)
+            .alignment(Alignment::Right),
+        );
 
     let mut lines: Vec<Line> = editor
         .text
