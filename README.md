@@ -9,9 +9,10 @@ my take on minimalist journal app made with ratatui.
 - [x] scrolling
 - [ ] wrapping
 - [ ] markdown rendering
-- [ ] side panels
+- [x] side panels
 - [x] search
 - [ ] replace
 - [ ] undo/redo
 - [ ] stats on title screen
-- [ ] database
+- [x] database
+- [ ] tags

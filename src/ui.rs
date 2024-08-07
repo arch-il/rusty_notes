@@ -10,6 +10,7 @@ use ratatui::{
 
 pub mod calendar;
 mod search;
+mod side_details;
 mod text_editor;
 
 use crate::editor::Editor;
@@ -82,5 +83,6 @@ pub fn draw_editor(f: &mut Frame, editor: &mut Editor) {
         .constraints([Constraint::Min(1), Constraint::Length(10)])
         .split(chunks[1]);
 
+    side_details::draw_side_details(f, &side_chunks[0], editor.creation_date, editor.last_edited);
     calendar::draw_calendar_month(f, &side_chunks[1]);
 }

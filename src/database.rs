@@ -9,8 +9,7 @@ pub struct Database {
 
 impl Database {
     pub fn new() -> Self {
-        // let conn = Connection::open_in_memory().expect("Failed to create connection");
-        // let conn = Connection::open("./database.db3").expect("Failed to connect to database");
+        let conn = Connection::open("./database.db3").expect("Failed to connect to database");
         // conn.execute(
         //     "CREATE TABLE note(
         //         id            INTEGER PRIMARY KEY,
