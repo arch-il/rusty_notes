@@ -61,7 +61,7 @@ fn main() -> io::Result<()> {
             State::Calendar(ref mut cal_state) => match cal_state {
                 CalendarState::Browse(ref mut cal_position) => {
                     terminal.draw(|f: &mut ratatui::Frame| {
-                        ui::calendar::draw_calendar_year(f, &f.size(), cal_position)
+                        ui::calendar::draw_calendar_year(f, &f.size(), cal_position, &database)
                     })?;
                     input::take_calendar_input(cal_state);
                 }

@@ -8,9 +8,14 @@ use ratatui::{
     Frame,
 };
 
-use crate::calendar::CalendarPosition;
+use crate::{calendar::CalendarPosition, database::Database};
 
-pub fn draw_calendar_year(f: &mut Frame, rect: &Rect, cal_position: &mut CalendarPosition) {
+pub fn draw_calendar_year(
+    f: &mut Frame,
+    rect: &Rect,
+    cal_position: &mut CalendarPosition,
+    database: &Database,
+) {
     let block = Block::default()
         .borders(Borders::ALL)
         .border_set(border::ROUNDED)
@@ -46,21 +51,31 @@ pub fn draw_calendar_year(f: &mut Frame, rect: &Rect, cal_position: &mut Calenda
                 20,
                 8,
             );
-            let mut paragraph;
+
+            let mut lines;
             match cal_position.editing {
                 crate::calendar::CurrentlyEditing::Year => {
-                    paragraph = get_month_paragraph(start, None); //? todo
+                    lines = get_month_in_lines(start); //? todo
                 }
                 crate::calendar::CurrentlyEditing::Month => {
-                    paragraph = get_month_paragraph(start, None);
+                    lines = get_month_in_lines(start);
                     if start.month() == cal_position.date.month() {
-                        paragraph = paragraph.on_blue();
+                        lines = lines.iter().map(|line| line.clone().on_blue()).collect();
                     }
                 }
                 crate::calendar::CurrentlyEditing::Day => {
-                    paragraph = get_month_paragraph(start, Some(cal_position.date));
+                    lines = get_month_in_lines(start);
                 }
             }
+
+            let dates: Vec<_> = database
+                .get_all_notes()
+                .iter()
+                .map(|x| x.creation_date)
+                .collect();
+            highlight_dates(&mut lines, start.month(), Some(cal_position.date), dates);
+
+            let paragraph = Paragraph::new(lines).wrap(Wrap { trim: false });
             start = start.checked_add_months(Months::new(1)).unwrap();
             f.render_widget(paragraph, rect);
         }
@@ -76,14 +91,13 @@ pub fn draw_calendar_month(f: &mut Frame, rect: &Rect) {
 
     let now = Local::now();
 
-    let paragraph = get_month_paragraph(now, None).block(block);
+    let paragraph = Paragraph::new(get_month_in_lines(now))
+        .wrap(Wrap { trim: false })
+        .block(block);
     f.render_widget(paragraph, *rect);
 }
 
-fn get_month_paragraph(
-    date: DateTime<Local>,
-    cursor: Option<DateTime<Local>>,
-) -> Paragraph<'static> {
+fn get_month_in_lines(date: DateTime<Local>) -> Vec<Line<'static>> {
     let month = date.format("%B").to_string();
     let year = date.year().to_string();
     let spaces = 20 - month.len() - year.len();
@@ -109,19 +123,31 @@ fn get_month_paragraph(
         if start.year() == now.year() && start.month() == now.month() && start.day() == now.day() {
             span = span.on_green();
         }
-        if let Some(cursor_date) = cursor {
-            if start.year() == cursor_date.year()
-                && start.month() == cursor_date.month()
-                && start.day() == cursor_date.day()
-            {
-                span = span.on_blue();
-            }
-        }
         start = start.checked_add_days(Days::new(1)).unwrap();
 
         line.spans.push(span);
     }
     lines.push(line);
+    lines
+}
 
-    Paragraph::new(lines).wrap(Wrap { trim: false })
+fn highlight_dates(
+    lines: &mut Vec<Line>,
+    month: u32,
+    cursor: Option<DateTime<Local>>,
+    dates: Vec<DateTime<Local>>,
+) {
+    for span in lines[2].spans.iter_mut() {
+        if dates
+            .iter()
+            .any(|date| date.month() == month && date.day().to_string() == span.to_string().trim())
+        {
+            *span = span.clone().on_yellow();
+        }
+        if let Some(cursor) = cursor {
+            if month == cursor.month() && span.to_string().trim() == cursor.day().to_string() {
+                *span = span.clone().on_blue();
+            }
+        }
+    }
 }
