@@ -83,6 +83,23 @@ pub fn draw_editor(f: &mut Frame, editor: &mut Editor) {
         .constraints([Constraint::Min(1), Constraint::Length(10)])
         .split(chunks[1]);
 
-    side_details::draw_side_details(f, &side_chunks[0], editor.creation_date, editor.last_edited);
+    side_details::draw_side_details(
+        f,
+        &side_chunks[0],
+        editor.creation_date,
+        editor.last_edited,
+        editor
+            .text
+            .lines
+            .iter()
+            .map(|line| {
+                if line.trim() == "" {
+                    0
+                } else {
+                    line.trim().split(" ").count()
+                }
+            })
+            .sum(),
+    );
     calendar::draw_calendar_month(f, &side_chunks[1]);
 }

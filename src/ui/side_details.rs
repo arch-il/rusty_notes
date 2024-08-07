@@ -12,6 +12,7 @@ pub fn draw_side_details(
     rect: &Rect,
     creation_date: DateTime<Local>,
     last_edited: DateTime<Local>,
+    word_count: usize,
 ) {
     let block = Block::default()
         .borders(Borders::ALL)
@@ -20,11 +21,13 @@ pub fn draw_side_details(
         .title_alignment(Alignment::Left);
 
     let lines = vec![
-        Line::from("Created:"),
-        Line::from(creation_date.format("%d/%m/%Y %H:%M").to_string()),
+        Line::from("Date:"),
+        Line::from(creation_date.format("%d/%m/%Y").to_string()),
         Line::from(""),
         Line::from("Edited:"),
         Line::from(last_edited.format("%d/%m/%Y %H:%M").to_string()),
+        Line::from(""),
+        Line::from(format!("Words: {}", word_count)),
     ];
 
     let paragraph = Paragraph::new(lines)
