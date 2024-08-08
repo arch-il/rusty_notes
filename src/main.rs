@@ -29,19 +29,24 @@ fn main() -> io::Result<()> {
     while state != State::Exit {
         match state {
             State::TitleScreen(ref mut title_screen_state) => {
-                terminal.draw(|f| ui::draw_title_screen(f))?;
-
                 input::take_title_screen_input(title_screen_state);
-
+                let mut draw_entry_picker = false;
                 match title_screen_state {
                     TitleScreenState::None => (),
-                    TitleScreenState::OpenNew => state = State::Editor(Editor::new()),
-                    TitleScreenState::OpenExisting => (), //? todo
+                    TitleScreenState::OpenTodaysEntry => state = State::Editor(Editor::new()),
+                    TitleScreenState::OpenOldEntry => draw_entry_picker = true,
                     TitleScreenState::Calendar => {
                         state = State::Calendar(CalendarState::Browse(CalendarPosition::new()))
                     }
                     TitleScreenState::Exit => state = State::Exit,
                 }
+
+                terminal.draw(|f| {
+                    ui::draw_title_screen(f);
+                    if draw_entry_picker {
+                        ui::draw_entry_picker(f);
+                    }
+                })?;
             }
             State::Editor(ref mut editor) => {
                 terminal.draw(|f| ui::draw_editor(f, editor))?;
@@ -55,7 +60,7 @@ fn main() -> io::Result<()> {
                     });
                 }
                 if editor.state == EditorState::Exit {
-                    state = State::Exit;
+                    state = State::TitleScreen(TitleScreenState::None);
                 }
             }
             State::Calendar(ref mut cal_state) => match cal_state {
@@ -72,7 +77,7 @@ fn main() -> io::Result<()> {
                     editor.last_edited = note.last_edited;
                     state = State::Editor(editor);
                 }
-                CalendarState::Exit => state = State::Exit,
+                CalendarState::Exit => state = State::TitleScreen(TitleScreenState::None),
             },
             State::Exit => todo!(),
         }

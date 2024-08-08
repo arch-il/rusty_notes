@@ -9,11 +9,13 @@ use ratatui::{
 };
 
 pub mod calendar;
+mod entry_picker;
 mod search;
 mod side_details;
 mod text_editor;
 
 use crate::editor::Editor;
+pub use entry_picker::draw_entry_picker;
 
 pub fn draw_title_screen(f: &mut Frame) {
     // let block = Block::default()
@@ -44,8 +46,8 @@ pub fn draw_title_screen(f: &mut Frame) {
         "",
         "",
         "",
-        "N - Open new file     ",
-        "O - Open existing file",
+        "T - Open today's entry",
+        "O - Open old entry    ",
         "C - Open calendar     ",
         "Q or Esc - Exit       ",
     ]);

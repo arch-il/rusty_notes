@@ -13,13 +13,20 @@ pub fn take_title_screen_input(state: &mut TitleScreenState) {
                 return;
             }
 
-            match key_event.code {
-                KeyCode::Char('n') => *state = TitleScreenState::OpenNew,
-                KeyCode::Char('o') => *state = TitleScreenState::OpenExisting,
-                KeyCode::Char('c') => *state = TitleScreenState::Calendar,
-                KeyCode::Char('q') => *state = TitleScreenState::Exit,
-                KeyCode::Esc => *state = TitleScreenState::Exit,
-                _ => (),
+            if *state == TitleScreenState::OpenOldEntry {
+                match key_event.code {
+                    KeyCode::Char('n') => *state = TitleScreenState::None,
+                    _ => (),
+                }
+            } else {
+                match key_event.code {
+                    KeyCode::Char('t') => *state = TitleScreenState::OpenTodaysEntry,
+                    KeyCode::Char('o') => *state = TitleScreenState::OpenOldEntry,
+                    KeyCode::Char('c') => *state = TitleScreenState::Calendar,
+                    KeyCode::Char('q') => *state = TitleScreenState::Exit,
+                    KeyCode::Esc => *state = TitleScreenState::Exit,
+                    _ => (),
+                }
             }
         }
         _ => (),
