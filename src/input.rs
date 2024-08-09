@@ -3,7 +3,7 @@ use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifier
 use crate::{
     calendar::CalendarState,
     editor::{Editor, EditorState, Search, Text},
-    title_screen::TitleScreenState,
+    title_screen::{EntryPicker, TitleScreenState},
 };
 
 pub fn take_title_screen_input(state: &mut TitleScreenState) {
@@ -13,15 +13,23 @@ pub fn take_title_screen_input(state: &mut TitleScreenState) {
                 return;
             }
 
-            if *state == TitleScreenState::OpenOldEntry {
+            if let TitleScreenState::OpenOldEntry(ref mut entry_picker) = state {
                 match key_event.code {
-                    KeyCode::Char('n') => *state = TitleScreenState::None,
+                    KeyCode::Char(c) => entry_picker.insert_char(c),
+
+                    KeyCode::Left => entry_picker.move_left(),
+                    KeyCode::Right => entry_picker.move_right(),
+
+                    KeyCode::Esc => *state = TitleScreenState::None,
+
                     _ => (),
                 }
             } else {
                 match key_event.code {
                     KeyCode::Char('t') => *state = TitleScreenState::OpenTodaysEntry,
-                    KeyCode::Char('o') => *state = TitleScreenState::OpenOldEntry,
+                    KeyCode::Char('o') => {
+                        *state = TitleScreenState::OpenOldEntry(EntryPicker::new())
+                    }
                     KeyCode::Char('c') => *state = TitleScreenState::Calendar,
                     KeyCode::Char('q') => *state = TitleScreenState::Exit,
                     KeyCode::Esc => *state = TitleScreenState::Exit,

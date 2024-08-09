@@ -30,11 +30,11 @@ fn main() -> io::Result<()> {
         match state {
             State::TitleScreen(ref mut title_screen_state) => {
                 input::take_title_screen_input(title_screen_state);
-                let mut draw_entry_picker = false;
+                let mut entry_picker = None;
                 match title_screen_state {
                     TitleScreenState::None => (),
                     TitleScreenState::OpenTodaysEntry => state = State::Editor(Editor::new()),
-                    TitleScreenState::OpenOldEntry => draw_entry_picker = true,
+                    TitleScreenState::OpenOldEntry(picker) => entry_picker = Some(picker.clone()),
                     TitleScreenState::Calendar => {
                         state = State::Calendar(CalendarState::Browse(CalendarPosition::new()))
                     }
@@ -43,8 +43,8 @@ fn main() -> io::Result<()> {
 
                 terminal.draw(|f| {
                     ui::draw_title_screen(f);
-                    if draw_entry_picker {
-                        ui::draw_entry_picker(f);
+                    if let Some(entry_picker) = entry_picker {
+                        ui::draw_entry_picker(f, &entry_picker);
                     }
                 })?;
             }
