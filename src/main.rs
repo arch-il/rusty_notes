@@ -34,7 +34,14 @@ fn main() -> io::Result<()> {
                 match title_screen_state {
                     TitleScreenState::None => (),
                     TitleScreenState::OpenTodaysEntry => state = State::Editor(Editor::new()),
-                    TitleScreenState::OpenOldEntry(picker) => entry_picker = Some(picker.clone()),
+                    TitleScreenState::EntryPicker(picker) => entry_picker = Some(picker.clone()),
+                    TitleScreenState::OpenOldEntry(ref date) => {
+                        let note = database.get_or_create_note(date);
+                        let mut editor = Editor::from_string(note.text);
+                        editor.creation_date = note.creation_date;
+                        editor.last_edited = note.last_edited;
+                        state = State::Editor(editor);
+                    }
                     TitleScreenState::Calendar => {
                         state = State::Calendar(CalendarState::Browse(CalendarPosition::new()))
                     }

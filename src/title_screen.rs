@@ -1,9 +1,10 @@
-use chrono::Local;
+use chrono::{DateTime, Local, TimeZone};
 
 #[derive(Debug, PartialEq)]
 pub enum TitleScreenState {
     None,
-    OpenOldEntry(EntryPicker),
+    EntryPicker(EntryPicker),
+    OpenOldEntry(DateTime<Local>),
     OpenTodaysEntry,
     Calendar,
     Exit,
@@ -44,5 +45,23 @@ impl EntryPicker {
             return;
         }
         self.cursor += 1;
+    }
+
+    pub fn get_date(&self) -> Option<DateTime<Local>> {
+        let date = Local
+            .with_ymd_and_hms(
+                self.input[4..6].parse().unwrap(),
+                self.input[2..4].parse().unwrap(),
+                self.input[0..2].parse().unwrap(),
+                0,
+                0,
+                0,
+            )
+            .unwrap();
+
+        if date < Local::now() {
+            return Some(date);
+        }
+        None
     }
 }

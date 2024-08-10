@@ -13,14 +13,23 @@ pub fn take_title_screen_input(state: &mut TitleScreenState) {
                 return;
             }
 
-            if let TitleScreenState::OpenOldEntry(ref mut entry_picker) = state {
+            if let TitleScreenState::EntryPicker(ref mut entry_picker) = state {
                 match key_event.code {
-                    KeyCode::Char(c) => entry_picker.insert_char(c),
-
                     KeyCode::Left => entry_picker.move_left(),
+                    KeyCode::Char('h') => entry_picker.move_left(),
                     KeyCode::Right => entry_picker.move_right(),
+                    KeyCode::Char('l') => entry_picker.move_right(),
+
+                    KeyCode::Enter => {
+                        if let Some(date) = entry_picker.get_date() {
+                            *state = TitleScreenState::OpenOldEntry(date);
+                        }
+                    }
 
                     KeyCode::Esc => *state = TitleScreenState::None,
+                    KeyCode::Char('q') => *state = TitleScreenState::None,
+
+                    KeyCode::Char(c) => entry_picker.insert_char(c),
 
                     _ => (),
                 }
@@ -28,7 +37,7 @@ pub fn take_title_screen_input(state: &mut TitleScreenState) {
                 match key_event.code {
                     KeyCode::Char('t') => *state = TitleScreenState::OpenTodaysEntry,
                     KeyCode::Char('o') => {
-                        *state = TitleScreenState::OpenOldEntry(EntryPicker::new())
+                        *state = TitleScreenState::EntryPicker(EntryPicker::new())
                     }
                     KeyCode::Char('c') => *state = TitleScreenState::Calendar,
                     KeyCode::Char('q') => *state = TitleScreenState::Exit,
