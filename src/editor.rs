@@ -21,6 +21,7 @@ pub struct Editor {
     pub scroll_offset: (u16, u16),
     pub screen_size: (u16, u16),
     pub write: bool,
+    pub side_panel: bool,
 }
 
 #[allow(dead_code)] //?
@@ -34,6 +35,7 @@ impl Editor {
             scroll_offset: (0, 0),
             screen_size: (0, 0),
             write: false,
+            side_panel: true,
         }
     }
 
@@ -46,6 +48,7 @@ impl Editor {
             scroll_offset: (0, 0),
             screen_size: (0, 0),
             write: false,
+            side_panel: true,
         }
     }
 
@@ -58,6 +61,7 @@ impl Editor {
             scroll_offset: (0, 0),
             screen_size: (0, 0),
             write: false,
+            side_panel: true,
         }
     }
 }

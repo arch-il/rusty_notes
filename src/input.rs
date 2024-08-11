@@ -56,16 +56,20 @@ pub fn take_editor_input(editor: &mut Editor) {
             if key_event.kind == KeyEventKind::Release {
                 return;
             }
-            if key_event.modifiers.contains(KeyModifiers::CONTROL)
-                && key_event.code == KeyCode::Char('w')
-            {
-                editor.write = true;
+            if key_event.modifiers.contains(KeyModifiers::CONTROL) {
+                match key_event.code {
+                    KeyCode::Char('w') => editor.write = true,
+                    KeyCode::Char('j') => editor.side_panel = !editor.side_panel,
+
+                    _ => (),
+                }
                 return;
-            }
-            match editor.state {
-                EditorState::Edit => text_editor_input(editor, &key_event),
-                EditorState::Search(_) => search_input(editor, &key_event),
-                _ => (),
+            } else {
+                match editor.state {
+                    EditorState::Edit => text_editor_input(editor, &key_event),
+                    EditorState::Search(_) => search_input(editor, &key_event),
+                    _ => (),
+                }
             }
         }
         _ => (),
