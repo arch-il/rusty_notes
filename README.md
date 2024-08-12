@@ -7,7 +7,7 @@ my take on minimalist journal app made with ratatui.
 - [x] copy/paste
 - [x] word jumping
 - [x] scrolling
-- [ ] wrapping
+- [x] wrapping
 - [ ] markdown rendering
 - [x] side panels
 - [x] search

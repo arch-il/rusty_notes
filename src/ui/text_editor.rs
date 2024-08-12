@@ -5,7 +5,7 @@ use ratatui::{
     text::{Line, Span},
     widgets::{
         block::{Position, Title},
-        Block, Borders, Paragraph,
+        Block, Borders, Paragraph, Wrap,
     },
     Frame,
 };
@@ -46,25 +46,33 @@ pub fn draw_text_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
         highlight_search(&mut lines, &search.text.lines[0]);
     }
 
-    add_line_numbers(&mut lines);
+    //? Line numbers are removed.
+    //? Reason: Note editor doesn't need line numbers.
+    //? Uncomment this line to add them?
+    // add_line_numbers(&mut lines);
 
     let inner_rect = rect.inner(Margin {
-        //?
         vertical: 1,
         horizontal: 1,
     });
     editor.screen_size = (
         inner_rect.height,
-        inner_rect.width - 2 - lines.len().to_string().len() as u16,
+        inner_rect.width - lines.len().to_string().len() as u16,
     ); //? temp
 
     let paragraph = Paragraph::new(lines)
         .block(editor_block)
-        .scroll(editor.scroll_offset);
+        .scroll(editor.scroll_offset)
+        .wrap(Wrap { trim: false });
     f.render_widget(paragraph, *rect);
 }
 
 fn highlight_cursor(lines: &mut Vec<Line>, cursor: &Cursor) {
+    if lines[cursor.0].to_string().trim().len() == 0 {
+        lines[cursor.0] = Line::from(".").black().on_white();
+        // lines.push(Line::from("Hello"));
+        // lines[cursor.0] = lines[cursor.0].clone().black().on_white();
+    }
     let cursor_line = lines[cursor.0].to_string();
     let left = String::from(&cursor_line[0..cursor.1]);
     let cursor_str = String::from(&cursor_line[cursor.1..cursor.1 + 1]);

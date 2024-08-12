@@ -56,7 +56,7 @@ fn main() -> io::Result<()> {
                 })?;
             }
             State::Editor(ref mut editor) => {
-                terminal.draw(|f| ui::draw_editor_screen(f, editor))?;
+                terminal.draw(|f| ui::draw_editor(f, editor))?;
                 input::take_editor_input(editor);
                 if editor.write {
                     database.insert_or_create_note(&Note {
