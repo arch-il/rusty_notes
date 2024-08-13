@@ -63,13 +63,11 @@ pub fn take_editor_input(editor: &mut Editor) {
 
                     _ => (),
                 }
-                return;
-            } else {
-                match editor.state {
-                    EditorState::Edit => text_editor_input(editor, &key_event),
-                    EditorState::Search(_) => search_input(editor, &key_event),
-                    _ => (),
-                }
+            }
+            match editor.state {
+                EditorState::Edit => text_editor_input(editor, &key_event),
+                EditorState::Search(_) => search_input(editor, &key_event),
+                _ => (),
             }
         }
         _ => (),
