@@ -17,7 +17,7 @@ pub fn draw_side_details(
     let block = Block::default()
         .borders(Borders::ALL)
         .border_set(border::ROUNDED)
-        .title("Month")
+        .title("Details")
         .title_alignment(Alignment::Left);
 
     let lines = vec![
