@@ -1,7 +1,5 @@
-use std::iter;
-
 use ratatui::{
-    layout::{Alignment, Constraint, Direction, Layout},
+    layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::Stylize,
     text::Line,
     widgets::Paragraph,
@@ -23,11 +21,8 @@ pub fn draw_title_screen(f: &mut Frame) {
     //     .border_set(border::ROUNDED)
     //     .title(Title::from("^_^").alignment(Alignment::Right))
     //     .green();
-
-    let title = vec![
-        "",
-        "",
-        "",
+    const TITLE_SIZE: (u16, u16) = (10, 93);
+    let title_text = vec![
         " ██▀███   █    ██   ██████ ▄▄▄█████▓▓██   ██▓    ███▄    █  ▒█████  ▄▄▄█████▓▓█████   ██████ ",
         "▓██ ▒ ██▒ ██  ▓██▒▒██    ▒ ▓  ██▒ ▓▒ ▒██  ██▒    ██ ▀█   █ ▒██▒  ██▒▓  ██▒ ▓▒▓█   ▀ ▒██    ▒ ",
         "▓██ ░▄█ ▒▓██  ▒██░░ ▓██▄   ▒ ▓██░ ▒░  ▒██ ██░   ▓██  ▀█ ██▒▒██░  ██▒▒ ▓██░ ▒░▒███   ░ ▓██▄   ",
@@ -39,26 +34,49 @@ pub fn draw_title_screen(f: &mut Frame) {
         "   ░        ░           ░            ░ ░                 ░     ░ ░              ░  ░      ░  ",
         "                                     ░ ░                                                     ",
     ];
-    let mut options: Vec<&str> = iter::repeat("")
-        .take(f.size().height as usize / 8)
-        .collect();
-    options.append(&mut vec![
-        "",
-        "",
-        "",
+
+    const OPTIONS_SIZE: (u16, u16) = (4, 22);
+    let options_text = vec![
         "T - Open today's entry",
         "O - Open old entry    ",
         "C - Open calendar     ",
         "Q or Esc - Exit       ",
-    ]);
-    let text: Vec<Line> = title
-        .iter()
-        .map(|x| Line::from(*x).red())
-        .chain(options.iter().map(|x| Line::from(*x).blue()))
-        .collect();
-    let paragraph = Paragraph::new(text).alignment(Alignment::Center);
+    ];
 
-    f.render_widget(paragraph, f.size());
+    let title_rect = Rect::new(
+        (f.size().width - TITLE_SIZE.1) / 2,
+        (f.size().height - TITLE_SIZE.0) / 5,
+        TITLE_SIZE.1,
+        TITLE_SIZE.0,
+    );
+
+    let options_rect = Rect::new(
+        (f.size().width - OPTIONS_SIZE.1) / 2,
+        (f.size().height - OPTIONS_SIZE.0) * 3 / 5,
+        OPTIONS_SIZE.1,
+        OPTIONS_SIZE.0,
+    );
+
+    let title = Paragraph::new(
+        title_text
+            .iter()
+            .map(|x| Line::raw(String::from(*x)))
+            .collect::<Vec<_>>(),
+    )
+    .red()
+    .alignment(Alignment::Center);
+
+    let options = Paragraph::new(
+        options_text
+            .iter()
+            .map(|x| Line::raw(String::from(*x)))
+            .collect::<Vec<_>>(),
+    )
+    .blue()
+    .alignment(Alignment::Center);
+
+    f.render_widget(title, title_rect);
+    f.render_widget(options, options_rect);
 }
 
 pub fn draw_editor(f: &mut Frame, editor: &mut Editor) {
