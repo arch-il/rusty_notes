@@ -1,8 +1,5 @@
 use ratatui::{
-    layout::{Alignment, Constraint, Direction, Layout, Rect},
-    style::Stylize,
-    text::Line,
-    widgets::Paragraph,
+    layout::{Constraint, Direction, Layout},
     Frame,
 };
 
@@ -11,73 +8,11 @@ mod entry_picker;
 mod search;
 mod side_details;
 mod text_editor;
+mod title_screen;
 
 use crate::editor::Editor;
 pub use entry_picker::draw_entry_picker;
-
-pub fn draw_title_screen(f: &mut Frame) {
-    // let block = Block::default()
-    //     .borders(Borders::ALL)
-    //     .border_set(border::ROUNDED)
-    //     .title(Title::from("^_^").alignment(Alignment::Right))
-    //     .green();
-    const TITLE_SIZE: (u16, u16) = (10, 93);
-    let title_text = vec![
-        " ██▀███   █    ██   ██████ ▄▄▄█████▓▓██   ██▓    ███▄    █  ▒█████  ▄▄▄█████▓▓█████   ██████ ",
-        "▓██ ▒ ██▒ ██  ▓██▒▒██    ▒ ▓  ██▒ ▓▒ ▒██  ██▒    ██ ▀█   █ ▒██▒  ██▒▓  ██▒ ▓▒▓█   ▀ ▒██    ▒ ",
-        "▓██ ░▄█ ▒▓██  ▒██░░ ▓██▄   ▒ ▓██░ ▒░  ▒██ ██░   ▓██  ▀█ ██▒▒██░  ██▒▒ ▓██░ ▒░▒███   ░ ▓██▄   ",
-        "▒██▀▀█▄  ▓▓█  ░██░  ▒   ██▒░ ▓██▓ ░   ░ ▐██▓░   ▓██▒  ▐▌██▒▒██   ██░░ ▓██▓ ░ ▒▓█  ▄   ▒   ██▒",
-        "░██▓ ▒██▒▒▒█████▓ ▒██████▒▒  ▒██▒ ░   ░ ██▒▓░   ▒██░   ▓██░░ ████▓▒░  ▒██▒ ░ ░▒████▒▒██████▒▒",
-        "░ ▒▓ ░▒▓░░▒▓▒ ▒ ▒ ▒ ▒▓▒ ▒ ░  ▒ ░░      ██▒▒▒    ░ ▒░   ▒ ▒ ░ ▒░▒░▒░   ▒ ░░   ░░ ▒░ ░▒ ▒▓▒ ▒ ░",
-        "  ░▒ ░ ▒░░░▒░ ░ ░ ░ ░▒  ░ ░    ░     ▓██ ░▒░    ░ ░░   ░ ▒░  ░ ▒ ▒░     ░     ░ ░  ░░ ░▒  ░ ░",
-        "  ░░   ░  ░░░ ░ ░ ░  ░  ░    ░       ▒ ▒ ░░        ░   ░ ░ ░ ░ ░ ▒    ░         ░   ░  ░  ░  ",
-        "   ░        ░           ░            ░ ░                 ░     ░ ░              ░  ░      ░  ",
-        "                                     ░ ░                                                     ",
-    ];
-
-    const OPTIONS_SIZE: (u16, u16) = (4, 22);
-    let options_text = vec![
-        "T - Open today's entry",
-        "O - Open old entry    ",
-        "C - Open calendar     ",
-        "Q or Esc - Exit       ",
-    ];
-
-    let title_rect = Rect::new(
-        (f.size().width - TITLE_SIZE.1) / 2,
-        (f.size().height - TITLE_SIZE.0) / 5,
-        TITLE_SIZE.1,
-        TITLE_SIZE.0,
-    );
-
-    let options_rect = Rect::new(
-        (f.size().width - OPTIONS_SIZE.1) / 2,
-        (f.size().height - OPTIONS_SIZE.0) * 3 / 5,
-        OPTIONS_SIZE.1,
-        OPTIONS_SIZE.0,
-    );
-
-    let title = Paragraph::new(
-        title_text
-            .iter()
-            .map(|x| Line::raw(String::from(*x)))
-            .collect::<Vec<_>>(),
-    )
-    .red()
-    .alignment(Alignment::Center);
-
-    let options = Paragraph::new(
-        options_text
-            .iter()
-            .map(|x| Line::raw(String::from(*x)))
-            .collect::<Vec<_>>(),
-    )
-    .blue()
-    .alignment(Alignment::Center);
-
-    f.render_widget(title, title_rect);
-    f.render_widget(options, options_rect);
-}
+pub use title_screen::draw_title_screen;
 
 pub fn draw_editor(f: &mut Frame, editor: &mut Editor) {
     if editor.side_panel {

@@ -1,8 +1,9 @@
 use chrono::{DateTime, Local, TimeZone};
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum TitleScreenState {
-    None,
+    Options,
+    Stats,
     EntryPicker(EntryPicker),
     OpenOldEntry(DateTime<Local>),
     OpenTodaysEntry,

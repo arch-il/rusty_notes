@@ -24,15 +24,16 @@ fn main() -> io::Result<()> {
     let mut terminal = terminal::init()?;
 
     let database = Database::new();
-    let mut state = State::TitleScreen(TitleScreenState::None);
+    let mut state = State::TitleScreen(TitleScreenState::Options);
 
     while state != State::Exit {
         match state {
             State::TitleScreen(ref mut title_screen_state) => {
                 input::take_title_screen_input(title_screen_state);
                 let mut entry_picker = None;
+                let temp_state = title_screen_state.clone();
+
                 match title_screen_state {
-                    TitleScreenState::None => (),
                     TitleScreenState::OpenTodaysEntry => state = State::Editor(Editor::new()),
                     TitleScreenState::EntryPicker(picker) => entry_picker = Some(picker.clone()),
                     TitleScreenState::OpenOldEntry(ref date) => {
@@ -46,10 +47,11 @@ fn main() -> io::Result<()> {
                         state = State::Calendar(CalendarState::Browse(CalendarPosition::new()))
                     }
                     TitleScreenState::Exit => state = State::Exit,
+                    _ => (),
                 }
 
                 terminal.draw(|f| {
-                    ui::draw_title_screen(f);
+                    ui::draw_title_screen(f, &temp_state, &database);
                     if let Some(entry_picker) = entry_picker {
                         ui::draw_entry_picker(f, &entry_picker);
                     }
@@ -67,7 +69,7 @@ fn main() -> io::Result<()> {
                     });
                 }
                 if editor.state == EditorState::Exit {
-                    state = State::TitleScreen(TitleScreenState::None);
+                    state = State::TitleScreen(TitleScreenState::Options);
                 }
             }
             State::Calendar(ref mut cal_state) => match cal_state {
@@ -84,7 +86,7 @@ fn main() -> io::Result<()> {
                     editor.last_edited = note.last_edited;
                     state = State::Editor(editor);
                 }
-                CalendarState::Exit => state = State::TitleScreen(TitleScreenState::None),
+                CalendarState::Exit => state = State::TitleScreen(TitleScreenState::Options),
             },
             State::Exit => todo!(),
         }

@@ -17,7 +17,7 @@ my take on minimalist journal app made with ratatui. Aim is to create simple not
 - [x] search
 - [ ] replace
 - [ ] undo/redo
-- [ ] stats on title screen
+- [x] stats on title screen
 - [x] database
 - [ ] tags
 - [ ] streaks

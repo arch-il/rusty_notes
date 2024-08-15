@@ -26,8 +26,8 @@ pub fn take_title_screen_input(state: &mut TitleScreenState) {
                         }
                     }
 
-                    KeyCode::Esc => *state = TitleScreenState::None,
-                    KeyCode::Char('q') => *state = TitleScreenState::None,
+                    KeyCode::Esc => *state = TitleScreenState::Options,
+                    KeyCode::Char('q') => *state = TitleScreenState::Options,
 
                     KeyCode::Char(c) => entry_picker.insert_char(c),
 
@@ -38,6 +38,13 @@ pub fn take_title_screen_input(state: &mut TitleScreenState) {
                     KeyCode::Char('t') => *state = TitleScreenState::OpenTodaysEntry,
                     KeyCode::Char('o') => {
                         *state = TitleScreenState::EntryPicker(EntryPicker::new())
+                    }
+                    KeyCode::Char('s') => {
+                        if state == &TitleScreenState::Options {
+                            *state = TitleScreenState::Stats;
+                        } else if state == &TitleScreenState::Stats {
+                            *state = TitleScreenState::Options;
+                        }
                     }
                     KeyCode::Char('c') => *state = TitleScreenState::Calendar,
                     KeyCode::Char('q') => *state = TitleScreenState::Exit,
