@@ -1,4 +1,4 @@
-use chrono::{DateTime, Datelike, Days, Local, Months, TimeZone};
+use chrono::{DateTime, Datelike, Days, Local, Months, NaiveDate, TimeZone};
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Margin, Rect},
     style::Stylize,
@@ -134,8 +134,8 @@ fn get_month_in_lines(date: DateTime<Local>) -> Vec<Line<'static>> {
 fn highlight_dates(
     lines: &mut Vec<Line>,
     month: u32,
-    cursor: Option<DateTime<Local>>,
-    dates: Vec<DateTime<Local>>,
+    cursor: Option<NaiveDate>,
+    dates: Vec<NaiveDate>,
 ) {
     for span in lines[2].spans.iter_mut() {
         if dates

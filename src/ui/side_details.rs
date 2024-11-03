@@ -1,4 +1,4 @@
-use chrono::{DateTime, Local};
+use chrono::{DateTime, Local, NaiveDate};
 use ratatui::{
     layout::{Alignment, Rect},
     symbols::border,
@@ -10,7 +10,7 @@ use ratatui::{
 pub fn draw_side_details(
     f: &mut Frame,
     rect: &Rect,
-    creation_date: DateTime<Local>,
+    creation_date: NaiveDate,
     last_edited: DateTime<Local>,
     word_count: usize,
 ) {

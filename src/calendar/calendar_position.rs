@@ -1,8 +1,8 @@
-use chrono::{DateTime, Days, Local, Months};
+use chrono::{Days, Local, Months, NaiveDate};
 
 #[derive(Debug)]
 pub struct CalendarPosition {
-    pub date: DateTime<Local>,
+    pub date: NaiveDate,
     pub editing: CurrentlyEditing,
     pub open: bool,
 }
@@ -17,7 +17,7 @@ pub enum CurrentlyEditing {
 impl CalendarPosition {
     pub fn new() -> Self {
         Self {
-            date: Local::now(),
+            date: Local::now().date_naive(),
             editing: CurrentlyEditing::Month,
             open: false,
         }

@@ -1,4 +1,4 @@
-use chrono::{DateTime, Datelike, Local};
+use chrono::{Datelike, Local, NaiveDate};
 use rusqlite::Connection;
 
 use crate::note::Note;
@@ -17,7 +17,7 @@ impl Database {
             "CREATE TABLE note(
                 id              INTEGER PRIMARY KEY,
                 text            TEXT NOT NULL,
-                creation_date   DATETIME NOT NULL,
+                creation_date   DATE NOT NULL,
                 last_edited     DATETIME NOT NULL
                 )",
             (),
@@ -60,26 +60,26 @@ impl Database {
             })
         })
         .unwrap()
-        .map(|note| note.unwrap())
+        .map(|note| note.expect("Failed to read Note from database"))
         .collect()
     }
 
-    pub fn get_or_create_note(&self, date: &DateTime<Local>) -> Note {
+    pub fn get_or_create_note(&self, creation_date: &NaiveDate) -> Note {
         if let Some(note) = self.get_all_notes().iter().find(|note| {
-            note.creation_date.year() == date.year()
-                && note.creation_date.month() == date.month()
-                && note.creation_date.day() == date.day()
+            note.creation_date.year() == creation_date.year()
+                && note.creation_date.month() == creation_date.month()
+                && note.creation_date.day() == creation_date.day()
         }) {
             return note.clone();
         }
         let note = Note {
             id: 0,
             text: String::from(" "),
-            creation_date: date.clone(),
-            last_edited: date.clone(),
+            creation_date: creation_date.clone(),
+            last_edited: Local::now(),
         };
         self.insert_note(&note);
-        self.get_or_create_note(date)
+        self.get_or_create_note(creation_date)
     }
 
     pub fn insert_or_create_note(&self, note: &Note) {
