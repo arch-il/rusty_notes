@@ -24,7 +24,7 @@ pub struct Editor {
     pub side_panel: bool,
 }
 
-#[allow(dead_code)] //?
+#[allow(dead_code)]
 impl Editor {
     pub fn new() -> Editor {
         Editor {

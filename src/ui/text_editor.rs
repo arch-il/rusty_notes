@@ -132,18 +132,19 @@ fn highlight_selection(lines: &mut Vec<Line>, cursor: &Cursor, selection_start: 
     ]);
 }
 
-fn add_line_numbers(lines: &mut Vec<Line>) {
-    let max_width = lines.len().to_string().len() + 1;
-    *lines = lines
-        .iter_mut()
-        .enumerate()
-        .map(|(i, line)| {
-            let mut temp = vec![Span::raw(format!("{:>max_width$} ", i + 1)).bold().green()];
-            temp.append(&mut line.spans);
-            Line::from(temp)
-        })
-        .collect();
-}
+//? Uncomment this to add line numbers
+// fn add_line_numbers(lines: &mut Vec<Line>) {
+//     let max_width = lines.len().to_string().len() + 1;
+//     *lines = lines
+//         .iter_mut()
+//         .enumerate()
+//         .map(|(i, line)| {
+//             let mut temp = vec![Span::raw(format!("{:>max_width$} ", i + 1)).bold().green()];
+//             temp.append(&mut line.spans);
+//             Line::from(temp)
+//         })
+//         .collect();
+// }
 
 fn highlight_search(lines: &mut Vec<Line>, search: &str) {
     if search.len() == 0 {

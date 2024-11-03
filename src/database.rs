@@ -10,16 +10,18 @@ pub struct Database {
 impl Database {
     pub fn new() -> Self {
         let conn = Connection::open("./database.db3").expect("Failed to connect to database");
-        // conn.execute(
-        //     "CREATE TABLE note(
-        //         id            INTEGER PRIMARY KEY,
-        //         text          TEXT NOT NULL,
-        //         creation_date DATETIME NOT NULL,
-        //         last_edited   DATETIME NOT NULL
-        //     )",
-        //     (),
-        // )
-        // .expect("Failed to create table");
+
+        // Try to create database
+        // No need to check error
+        let _ = conn.execute(
+            "CREATE TABLE note(
+                id              INTEGER PRIMARY KEY,
+                text            TEXT NOT NULL,
+                creation_date   DATETIME NOT NULL,
+                last_edited     DATETIME NOT NULL
+                )",
+            (),
+        );
 
         Self { conn }
     }
