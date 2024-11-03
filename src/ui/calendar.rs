@@ -1,4 +1,4 @@
-use chrono::{DateTime, Datelike, Days, Local, Months, NaiveDate, TimeZone};
+use chrono::{Datelike, Days, Local, Months, NaiveDate, TimeZone};
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Margin, Rect},
     style::Stylize,
@@ -29,9 +29,7 @@ pub fn draw_calendar_year(
         .split(rect.inner(Margin::new(1, 1)));
 
     let starting_point = cal_position.date;
-    let mut start = Local
-        .with_ymd_and_hms(starting_point.year(), 1, 1, 0, 0, 0)
-        .unwrap();
+    let mut start = NaiveDate::from_ymd_opt(starting_point.year(), 1, 1).unwrap();
 
     for chunk in vertical_chunks.iter() {
         let horizontal_chunks = Layout::default()
@@ -73,7 +71,13 @@ pub fn draw_calendar_year(
                 .iter()
                 .map(|x| x.creation_date)
                 .collect();
-            highlight_dates(&mut lines, start.month(), Some(cal_position.date), dates);
+            highlight_dates(
+                &mut lines,
+                start.month(),
+                start.year(),
+                Some(cal_position.date),
+                dates,
+            );
 
             let paragraph = Paragraph::new(lines).wrap(Wrap { trim: false });
             start = start.checked_add_months(Months::new(1)).unwrap();
@@ -91,13 +95,13 @@ pub fn draw_calendar_month(f: &mut Frame, rect: &Rect) {
 
     let now = Local::now();
 
-    let paragraph = Paragraph::new(get_month_in_lines(now))
+    let paragraph = Paragraph::new(get_month_in_lines(now.date_naive()))
         .wrap(Wrap { trim: false })
         .block(block);
     f.render_widget(paragraph, *rect);
 }
 
-fn get_month_in_lines(date: DateTime<Local>) -> Vec<Line<'static>> {
+fn get_month_in_lines(date: NaiveDate) -> Vec<Line<'static>> {
     let month = date.format("%B").to_string();
     let year = date.year().to_string();
     let spaces = 20 - month.len() - year.len();
@@ -134,14 +138,16 @@ fn get_month_in_lines(date: DateTime<Local>) -> Vec<Line<'static>> {
 fn highlight_dates(
     lines: &mut Vec<Line>,
     month: u32,
+    year: i32,
     cursor: Option<NaiveDate>,
     dates: Vec<NaiveDate>,
 ) {
     for span in lines[2].spans.iter_mut() {
-        if dates
-            .iter()
-            .any(|date| date.month() == month && date.day().to_string() == span.to_string().trim())
-        {
+        if dates.iter().any(|date| {
+            date.year() == year
+                && date.month() == month
+                && date.day().to_string() == span.to_string().trim()
+        }) {
             *span = span.clone().on_yellow();
         }
         if let Some(cursor) = cursor {
