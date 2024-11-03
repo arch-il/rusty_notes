@@ -136,7 +136,7 @@ fn get_month_in_lines(date: NaiveDate) -> Vec<Line<'static>> {
 }
 
 fn highlight_dates(
-    lines: &mut Vec<Line>,
+    lines: &mut [Line],
     month: u32,
     year: i32,
     cursor: Option<NaiveDate>,

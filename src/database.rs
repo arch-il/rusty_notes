@@ -7,6 +7,12 @@ pub struct Database {
     conn: Connection,
 }
 
+impl Default for Database {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Database {
     pub fn new() -> Self {
         let conn = Connection::open("./database.db3").expect("Failed to connect to database");
@@ -75,7 +81,7 @@ impl Database {
         let note = Note {
             id: 0,
             text: String::from(" "),
-            creation_date: creation_date.clone(),
+            creation_date: *creation_date,
             last_edited: Local::now(),
         };
         self.insert_note(&note);

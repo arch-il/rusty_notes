@@ -7,77 +7,69 @@ use crate::{
 };
 
 pub fn take_title_screen_input(state: &mut TitleScreenState) {
-    match event::read().unwrap() {
-        Event::Key(key_event) => {
-            if key_event.kind == KeyEventKind::Release {
-                return;
+    if let Event::Key(key_event) = event::read().unwrap() {
+        if key_event.kind == KeyEventKind::Release {
+            return;
+        }
+
+        if let TitleScreenState::EntryPicker(ref mut entry_picker) = state {
+            match key_event.code {
+                KeyCode::Left => entry_picker.move_left(),
+                KeyCode::Char('h') => entry_picker.move_left(),
+                KeyCode::Right => entry_picker.move_right(),
+                KeyCode::Char('l') => entry_picker.move_right(),
+
+                KeyCode::Enter => {
+                    if let Some(date) = entry_picker.get_date() {
+                        *state = TitleScreenState::OpenOldEntry(date);
+                    }
+                }
+
+                KeyCode::Esc => *state = TitleScreenState::Options,
+                KeyCode::Char('q') => *state = TitleScreenState::Options,
+
+                KeyCode::Char(c) => entry_picker.insert_char(c),
+
+                _ => (),
             }
-
-            if let TitleScreenState::EntryPicker(ref mut entry_picker) = state {
-                match key_event.code {
-                    KeyCode::Left => entry_picker.move_left(),
-                    KeyCode::Char('h') => entry_picker.move_left(),
-                    KeyCode::Right => entry_picker.move_right(),
-                    KeyCode::Char('l') => entry_picker.move_right(),
-
-                    KeyCode::Enter => {
-                        if let Some(date) = entry_picker.get_date() {
-                            *state = TitleScreenState::OpenOldEntry(date);
-                        }
+        } else {
+            match key_event.code {
+                KeyCode::Char('t') => *state = TitleScreenState::OpenTodaysEntry,
+                KeyCode::Char('o') => *state = TitleScreenState::EntryPicker(EntryPicker::new()),
+                KeyCode::Char('s') => {
+                    if state == &TitleScreenState::Options {
+                        *state = TitleScreenState::Stats;
+                    } else if state == &TitleScreenState::Stats {
+                        *state = TitleScreenState::Options;
                     }
-
-                    KeyCode::Esc => *state = TitleScreenState::Options,
-                    KeyCode::Char('q') => *state = TitleScreenState::Options,
-
-                    KeyCode::Char(c) => entry_picker.insert_char(c),
-
-                    _ => (),
                 }
-            } else {
-                match key_event.code {
-                    KeyCode::Char('t') => *state = TitleScreenState::OpenTodaysEntry,
-                    KeyCode::Char('o') => {
-                        *state = TitleScreenState::EntryPicker(EntryPicker::new())
-                    }
-                    KeyCode::Char('s') => {
-                        if state == &TitleScreenState::Options {
-                            *state = TitleScreenState::Stats;
-                        } else if state == &TitleScreenState::Stats {
-                            *state = TitleScreenState::Options;
-                        }
-                    }
-                    KeyCode::Char('c') => *state = TitleScreenState::Calendar,
-                    KeyCode::Char('q') => *state = TitleScreenState::Exit,
-                    KeyCode::Esc => *state = TitleScreenState::Exit,
-                    _ => (),
-                }
+                KeyCode::Char('c') => *state = TitleScreenState::Calendar,
+                KeyCode::Char('q') => *state = TitleScreenState::Exit,
+                KeyCode::Esc => *state = TitleScreenState::Exit,
+                _ => (),
             }
         }
-        _ => (),
     }
 }
 
 pub fn take_editor_input(editor: &mut Editor) {
-    match event::read().unwrap() {
-        Event::Key(key_event) => {
-            if key_event.kind == KeyEventKind::Release {
-                return;
-            }
-            if key_event.modifiers.contains(KeyModifiers::CONTROL) {
-                match key_event.code {
-                    KeyCode::Char('w') => editor.write = true,
-                    KeyCode::Char('j') => editor.side_panel = !editor.side_panel,
+    if let Event::Key(key_event) = event::read().unwrap() {
+        if key_event.kind == KeyEventKind::Release {
+            return;
+        }
+        if key_event.modifiers.contains(KeyModifiers::CONTROL) {
+            match key_event.code {
+                KeyCode::Char('w') => editor.write = true,
+                KeyCode::Char('j') => editor.side_panel = !editor.side_panel,
 
-                    _ => (),
-                }
-            }
-            match editor.state {
-                EditorState::Edit => text_editor_input(editor, &key_event),
-                EditorState::Search(_) => search_input(editor, &key_event),
                 _ => (),
             }
         }
-        _ => (),
+        match editor.state {
+            EditorState::Edit => text_editor_input(editor, &key_event),
+            EditorState::Search(_) => search_input(editor, &key_event),
+            _ => (),
+        }
     }
 }
 
@@ -116,38 +108,34 @@ fn search_input(editor: &mut Editor, key_event: &KeyEvent) {
 }
 
 pub fn take_calendar_input(state: &mut CalendarState) {
-    match event::read().unwrap() {
-        Event::Key(key_event) => {
-            if key_event.kind == KeyEventKind::Release {
+    if let Event::Key(key_event) = event::read().unwrap() {
+        if key_event.kind == KeyEventKind::Release {
+            return;
+        }
+        if let CalendarState::Browse(ref mut cal_position) = state {
+            if cal_position.open {
+                *state = CalendarState::Open(cal_position.date);
                 return;
             }
-            if let CalendarState::Browse(ref mut cal_position) = state {
-                if cal_position.open {
-                    *state = CalendarState::Open(cal_position.date);
-                    return;
-                }
-                match key_event.code {
-                    KeyCode::Left => cal_position.move_left(),
-                    KeyCode::Char('h') => cal_position.move_left(),
-                    KeyCode::Right => cal_position.move_right(),
-                    KeyCode::Char('l') => cal_position.move_right(),
-                    KeyCode::Up => cal_position.move_up(),
-                    KeyCode::Char('k') => cal_position.move_up(),
-                    KeyCode::Down => cal_position.move_down(),
-                    KeyCode::Char('j') => cal_position.move_down(),
+            match key_event.code {
+                KeyCode::Left => cal_position.move_left(),
+                KeyCode::Char('h') => cal_position.move_left(),
+                KeyCode::Right => cal_position.move_right(),
+                KeyCode::Char('l') => cal_position.move_right(),
+                KeyCode::Up => cal_position.move_up(),
+                KeyCode::Char('k') => cal_position.move_up(),
+                KeyCode::Down => cal_position.move_down(),
+                KeyCode::Char('j') => cal_position.move_down(),
 
-                    KeyCode::Enter => cal_position.choose_selection(),
-                    KeyCode::Backspace => cal_position.backtrace_selection(),
+                KeyCode::Enter => cal_position.choose_selection(),
+                KeyCode::Backspace => cal_position.backtrace_selection(),
 
-                    KeyCode::Esc => *state = CalendarState::Exit,
-                    KeyCode::Char('q') => *state = CalendarState::Exit,
+                KeyCode::Esc => *state = CalendarState::Exit,
+                KeyCode::Char('q') => *state = CalendarState::Exit,
 
-                    _ => (),
-                }
+                _ => (),
             }
         }
-
-        _ => (),
     }
 }
 

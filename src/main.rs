@@ -80,7 +80,7 @@ fn main() -> io::Result<()> {
                     input::take_calendar_input(cal_state);
                 }
                 CalendarState::Open(date) => {
-                    let note = database.get_or_create_note(&date);
+                    let note = database.get_or_create_note(date);
                     let mut editor = Editor::from_string(note.text);
                     editor.creation_date = note.creation_date;
                     editor.last_edited = note.last_edited;

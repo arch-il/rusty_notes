@@ -128,7 +128,6 @@ impl Text {
             self.cursor.1 = self.lines[self.cursor.0].len();
             self.cursor.1 = self.get_biggest_space();
             self.focus = true;
-
         }
     }
 
@@ -144,9 +143,9 @@ impl Text {
             biggest = Some(i);
         }
         if let Some(biggest) = biggest {
-            return biggest + 1;
+            biggest + 1
         } else {
-            return 0;
+            0
         }
     }
 
@@ -191,9 +190,9 @@ impl Text {
             smallest = Some(i);
         }
         if let Some(biggest) = smallest {
-            return biggest;
+            biggest
         } else {
-            return size;
+            size
         }
     }
 }

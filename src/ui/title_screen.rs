@@ -36,8 +36,8 @@ pub fn draw_title_screen(f: &mut Frame, state: &TitleScreenState, database: &Dat
         let notes = database.get_all_notes();
         let num_notes = notes.len();
         let num_words = notes.iter().fold(0, |acc, note| {
-            acc + note.text.split("\n").into_iter().fold(0, |acc, line| {
-                acc + if line.trim().len() == 0 {
+            acc + note.text.split("\n").fold(0, |acc, line| {
+                acc + if line.trim().is_empty() {
                     0
                 } else {
                     line.split(" ").count()

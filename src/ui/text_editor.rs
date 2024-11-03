@@ -67,11 +67,9 @@ pub fn draw_text_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
     f.render_widget(paragraph, *rect);
 }
 
-fn highlight_cursor(lines: &mut Vec<Line>, cursor: &Cursor) {
-    if lines[cursor.0].to_string().trim().len() == 0 {
+fn highlight_cursor(lines: &mut [Line], cursor: &Cursor) {
+    if lines[cursor.0].to_string().is_empty() {
         lines[cursor.0] = Line::from(".").black().on_white();
-        // lines.push(Line::from("Hello"));
-        // lines[cursor.0] = lines[cursor.0].clone().black().on_white();
     }
     let cursor_line = lines[cursor.0].to_string();
     let left = String::from(&cursor_line[0..cursor.1]);
@@ -79,13 +77,13 @@ fn highlight_cursor(lines: &mut Vec<Line>, cursor: &Cursor) {
     let right = String::from(&cursor_line[cursor.1 + 1..]);
 
     lines[cursor.0] = Line::from(vec![
-        Span::raw(String::from(left)),
+        Span::raw(left),
         Span::raw(cursor_str).black().on_white(),
-        Span::raw(String::from(right)),
+        Span::raw(right),
     ]);
 }
 
-fn highlight_selection(lines: &mut Vec<Line>, cursor: &Cursor, selection_start: &Cursor) {
+fn highlight_selection(lines: &mut [Line], cursor: &Cursor, selection_start: &Cursor) {
     let mut start = cursor;
     let mut end = selection_start;
     if cursor > selection_start {
@@ -100,9 +98,9 @@ fn highlight_selection(lines: &mut Vec<Line>, cursor: &Cursor, selection_start: 
         let right = String::from(&cursor_line[end.1 + 1..]);
 
         lines[start.0] = Line::from(vec![
-            Span::raw(String::from(left)),
+            Span::raw(left),
             Span::raw(cursor_str).black().on_light_blue(),
-            Span::raw(String::from(right)),
+            Span::raw(right),
         ]);
         return;
     }
@@ -146,8 +144,8 @@ fn highlight_selection(lines: &mut Vec<Line>, cursor: &Cursor, selection_start: 
 //         .collect();
 // }
 
-fn highlight_search(lines: &mut Vec<Line>, search: &str) {
-    if search.len() == 0 {
+fn highlight_search(lines: &mut [Line], search: &str) {
+    if search.is_empty() {
         return;
     }
 
@@ -188,7 +186,7 @@ fn highlight_search(lines: &mut Vec<Line>, search: &str) {
     }
 }
 
-fn get_spans_in_range<'a>(from_spans: Vec<Span<'a>>, start: usize, end: usize) -> Vec<Span<'a>> {
+fn get_spans_in_range(from_spans: Vec<Span>, start: usize, end: usize) -> Vec<Span> {
     let mut i = 0;
     let mut len = 0;
     let mut result = Vec::new();
@@ -211,17 +209,17 @@ fn get_spans_in_range<'a>(from_spans: Vec<Span<'a>>, start: usize, end: usize) -
         if len + span_len >= end {
             to = Some(end - len);
         }
-        if to.is_some() {
+        if let Some(to) = to {
             result.push(
                 Span::raw(String::from(
-                    &from_spans[i].to_string()[from.unwrap_or(0)..to.unwrap()],
+                    &from_spans[i].to_string()[from.unwrap_or(0)..to],
                 ))
                 .style(from_spans[i].style),
             );
             break;
-        } else if from.is_some() {
+        } else if let Some(from) = from {
             result.push(
-                Span::raw(String::from(&from_spans[i].to_string()[from.unwrap()..]))
+                Span::raw(String::from(&from_spans[i].to_string()[from..]))
                     .style(from_spans[i].style),
             );
         } else {

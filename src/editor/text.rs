@@ -49,11 +49,10 @@ impl Text {
 
         let after_split = self.lines[self.cursor.0].split_at(self.cursor.1);
         let after_split = (String::from(after_split.0), String::from(after_split.1));
-        self.lines[self.cursor.0] = String::from(after_split.0);
+        self.lines[self.cursor.0] = after_split.0;
         self.cursor.0 += 1;
         self.cursor.1 = 0;
-        self.lines
-            .insert(self.cursor.0, String::from(after_split.1));
+        self.lines.insert(self.cursor.0, after_split.1);
 
         self.focus = true;
     }
@@ -146,8 +145,7 @@ impl Text {
 
             if start.0 == end.0 {
                 let line = &self.lines[start.0];
-                self.lines[start.0] =
-                    String::from(String::from(&line[0..start.1]) + &line[end.1 + 1..]);
+                self.lines[start.0] = String::from(&line[0..start.1]) + &line[end.1 + 1..];
             } else {
                 self.lines[end.0] =
                     String::from(&self.lines[start.0][0..start.1]) + &self.lines[end.0][end.1..];

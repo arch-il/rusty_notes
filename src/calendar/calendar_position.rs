@@ -14,6 +14,12 @@ pub enum CurrentlyEditing {
     Day,
 }
 
+impl Default for CalendarPosition {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CalendarPosition {
     pub fn new() -> Self {
         Self {
