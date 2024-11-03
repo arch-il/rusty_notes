@@ -68,13 +68,15 @@ pub fn draw_text_editor(f: &mut Frame, rect: &Rect, editor: &mut Editor) {
 }
 
 fn highlight_cursor(lines: &mut [Line], cursor: &Cursor) {
-    if lines[cursor.0].to_string().is_empty() {
-        lines[cursor.0] = Line::from(".").black().on_white();
-    }
     let cursor_line = lines[cursor.0].to_string();
     let left = String::from(&cursor_line[0..cursor.1]);
-    let cursor_str = String::from(&cursor_line[cursor.1..cursor.1 + 1]);
+    let mut cursor_str = String::from(&cursor_line[cursor.1..cursor.1 + 1]);
     let right = String::from(&cursor_line[cursor.1 + 1..]);
+
+    // Can't render space as cursor
+    if cursor_str == String::from(" ") {
+        cursor_str = String::from("_");
+    }
 
     lines[cursor.0] = Line::from(vec![
         Span::raw(left),
