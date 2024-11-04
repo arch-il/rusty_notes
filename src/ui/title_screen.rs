@@ -1,3 +1,4 @@
+use chrono::{Days, Local};
 use ratatui::{
     layout::{Alignment, Rect},
     style::Stylize,
@@ -44,10 +45,22 @@ pub fn draw_title_screen(f: &mut Frame, state: &TitleScreenState, database: &Dat
                 }
             })
         });
+
+        let mut curr_streak = 0;
+        let mut temp_date = Local::now().date_naive();
+        loop {
+            if notes.iter().any(|note| note.creation_date == temp_date) {
+                curr_streak += 1;
+                temp_date = temp_date.checked_sub_days(Days::new(1)).unwrap();
+            } else {
+                break;
+            }
+        }
+
         some_text = vec![
             format!("Days:    {:>4}", num_notes),
             format!("Words:   {:>4}", num_words),
-            String::from("Streak:     3"), //? todo
+            format!("Streak:  {:>4}", curr_streak),
             String::from("Max streak: 3"), //? todo
             String::new(),
             String::from("S - Go back  "),
