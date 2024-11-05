@@ -74,7 +74,7 @@ fn highlight_cursor(lines: &mut [Line], cursor: &Cursor) {
     let right = String::from(&cursor_line[cursor.1 + 1..]);
 
     // Can't render space as cursor
-    if cursor_str == String::from(" ") {
+    if cursor_str == *" " {
         cursor_str = String::from("_");
     }
 
